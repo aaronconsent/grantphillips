@@ -24,8 +24,11 @@ const schema = {
 
 <Hero
   eyebrow="About"
-  title="The long version."
+  title="The <span class='italic text-gold'>long</span> version."
   lede="Grant Dewell Phillips is a double bassist and Master of Music candidate at the Michigan State University College of Music. He has performed continuously since middle school, building a reputation for reliability, musicianship, and a tone that anchors any ensemble he joins."
+  image="/images/grant-portrait.jpg"
+  imageAlt="Portrait of Grant Dewell Phillips standing with his double bass"
+  imagePosition="65% top"
 >
   <p class="mt-6"><span class="inline-block bg-gold text-ink px-4 py-1.5 text-xs tracking-ultra uppercase font-semibold">Currently · M.M. candidate at MSU</span></p>
 </Hero>
@@ -45,6 +48,17 @@ const schema = {
 
         <p>Today, Grant continues his journey at Michigan State University, performing with orchestras throughout the Ann Arbor and Lansing area — still following the instrument he chose as a kid newly arrived in Houston, and still letting it carry him somewhere new.</p>
       </div>
+
+      <!-- Off-stage moment -->
+      <figure class="mt-16 -mx-5 sm:mx-0">
+        <img
+          src="/images/grant-offstage.jpg"
+          alt="Grant offstage with a Guitar Hero controller"
+          class="w-full object-cover max-h-[460px]"
+          loading="lazy"
+        />
+        <figcaption class="mt-3 text-xs tracking-wider uppercase text-cream/40 text-center">Off the stand.</figcaption>
+      </figure>
 
       <div class="rule-gold w-32 my-20"></div>
 
