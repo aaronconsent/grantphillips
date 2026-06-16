@@ -1,0 +1,87 @@
+---
+const path = Astro.url.pathname;
+const isActive = (p) => path === p || path.startsWith(p + '/');
+const nav = [
+  { href: '/about/', label: 'About' },
+  { href: '/performances/', label: 'Performances' },
+  { href: '/services/weddings/', label: 'Weddings' },
+  { href: '/services/churches/', label: 'Churches' },
+  { href: '/services/jazz/', label: 'Jazz' },
+  { href: '/services/orchestral/', label: 'Orchestral' },
+];
+---
+<header class="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-ink/75 border-b border-rule/40">
+  <div class="container-x flex items-center justify-between h-16 lg:h-20">
+    <a href="/" class="font-display text-lg lg:text-xl tracking-wide text-cream hover:text-gold transition">
+      Grant <span class="text-gold">Phillips</span>
+    </a>
+    <nav class="hidden lg:flex items-center gap-8" aria-label="Primary">
+      {nav.map(item => (
+        <a href={item.href} class:list={['nav-link', isActive(item.href) && 'text-gold']}>
+          {item.label}
+        </a>
+      ))}
+      <a href="/contact/" class="btn btn-gold !py-2.5 !min-h-0 !px-5">Book</a>
+    </nav>
+    <button
+      type="button"
+      id="hamburger"
+      class="lg:hidden w-11 h-11 inline-flex flex-col items-center justify-center gap-1.5 border border-rule/60 rounded"
+      aria-label="Menu"
+      aria-expanded="false"
+      aria-controls="mobile-nav"
+    >
+      <span class="block w-5 h-px bg-cream transition-transform"></span>
+      <span class="block w-5 h-px bg-cream transition-opacity"></span>
+      <span class="block w-5 h-px bg-cream transition-transform"></span>
+    </button>
+  </div>
+
+  <nav
+    id="mobile-nav"
+    class="lg:hidden hidden flex-col bg-ink border-t border-rule"
+    aria-label="Mobile"
+  >
+    {nav.map(item => (
+      <a href={item.href} class="px-6 py-4 border-b border-rule text-cream hover:text-gold">
+        {item.label}
+      </a>
+    ))}
+    <a href="/contact/" class="m-5 btn btn-gold">Book Grant</a>
+  </nav>
+</header>
+<div class="h-16 lg:h-20"></div>
+
+<script>
+  const btn = document.getElementById('hamburger');
+  const nav = document.getElementById('mobile-nav');
+  if (btn && nav) {
+    const spans = btn.querySelectorAll('span');
+    const close = () => {
+      nav.classList.add('hidden');
+      nav.classList.remove('flex');
+      btn.setAttribute('aria-expanded', 'false');
+      spans[0].style.transform = '';
+      spans[1].style.opacity = '';
+      spans[2].style.transform = '';
+      document.body.style.overflow = '';
+    };
+    const open = () => {
+      nav.classList.remove('hidden');
+      nav.classList.add('flex');
+      btn.setAttribute('aria-expanded', 'true');
+      spans[0].style.transform = 'translateY(7px) rotate(45deg)';
+      spans[1].style.opacity = '0';
+      spans[2].style.transform = 'translateY(-7px) rotate(-45deg)';
+      document.body.style.overflow = 'hidden';
+    };
+    btn.addEventListener('click', () => {
+      nav.classList.contains('hidden') ? open() : close();
+    });
+    nav.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).tagName === 'A') close();
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    window.addEventListener('resize', () => { if (window.innerWidth >= 1024) close(); });
+  }
+</script>

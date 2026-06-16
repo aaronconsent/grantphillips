@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
+const schema = {"@context":"https://schema.org","@type":"Service","serviceType":"Jazz Double Bass Performance","provider":{"@type":"Person","name":"Grant Dewell Phillips"},"areaServed":{"@type":"State","name":"Michigan"}};
+---
+<BaseLayout
+  title="Jazz Double Bass for Hire — Clubs, Restaurants, Hotels | Michigan"
+  description="Upright jazz bassist available for clubs, restaurants, hotel lobbies, and private events. Reads charts, plays standards by ear, walking bass and brushes-and-bass formats."
+  schema={schema}
+>
+
+<Hero
+  eyebrow="Jazz"
+  title="Upright. Walking. <span class='italic text-gold'>In the pocket</span>."
+  lede="For Michigan jazz clubs, restaurants, hotel lobbies, and private events that want the real sound — acoustic upright bass, not a fretless plug-in — anchoring a duo, trio, or quartet."
+>
+  <div class="mt-10"><a href="/contact/" class="btn btn-gold">Book a date</a></div>
+</Hero>
+
+<section class="pb-24">
+  <div class="container-x max-w-4xl">
+    <h2 class="display text-3xl lg:text-4xl">Formats that <span class="italic text-gold">fit the room</span>.</h2>
+    <div class="mt-10 grid md:grid-cols-3 gap-6">
+      <div class="card-dark"><p class="eyebrow mb-3">Solo / Duo</p><h3 class="font-display text-xl text-cream mb-3">Brushes-and-bass</h3><p class="text-sm text-cream/65">Quietest jazz format — perfect for restaurants, lobbies, cocktail receptions where music supports conversation.</p></div>
+      <div class="card-dark"><p class="eyebrow mb-3">Trio</p><h3 class="font-display text-xl text-cream mb-3">Piano · Bass · Drums</h3><p class="text-sm text-cream/65">Classic format. Real Book standards, ballads, blues, Latin — bookable as a Grant-led unit or sideman.</p></div>
+      <div class="card-dark"><p class="eyebrow mb-3">Quartet+</p><h3 class="font-display text-xl text-cream mb-3">Add a horn or vocalist</h3><p class="text-sm text-cream/65">Saxophone, trumpet, or vocal-fronted quartets for clubs, festivals, private events. Collaborator network across Michigan.</p></div>
+    </div>
+
+    <h2 class="display text-3xl lg:text-4xl mt-20">Material.</h2>
+    <div class="mt-6">
+      <span class="tag">Great American Songbook</span><span class="tag">Bebop heads</span>
+      <span class="tag">Swing standards</span><span class="tag">Ballads</span>
+      <span class="tag">Blues</span><span class="tag">Bossa nova</span>
+      <span class="tag">Modal jazz</span><span class="tag">Hard bop</span>
+      <span class="tag">Holiday jazz / Vince Guaraldi</span>
+    </div>
+
+    <h2 class="display text-3xl lg:text-4xl mt-20">What club bookers and restaurant owners get.</h2>
+    <ul class="mt-6 space-y-3 text-cream/80">
+      <li><span class="text-gold">⌁</span> <strong class="text-cream">Acoustic upright sound</strong> — visual presence on the stand, real woody tone in the room.</li>
+      <li><span class="text-gold">⌁</span> <strong class="text-cream">Reads charts.</strong> Fake-book sheet, key changes — no problem.</li>
+      <li><span class="text-gold">⌁</span> <strong class="text-cream">Plays by ear.</strong> Standards memorized; tunes called on the bandstand are fine.</li>
+      <li><span class="text-gold">⌁</span> <strong class="text-cream">Quiet logistics.</strong> One trip in/out, owns transportation and amplification.</li>
+      <li><span class="text-gold">⌁</span> <strong class="text-cream">Sideman or leader.</strong> Subs into your band or brings a curated trio.</li>
+    </ul>
+
+    <h2 class="display text-3xl lg:text-4xl mt-20">Where the bass goes.</h2>
+    <p class="mt-6 text-cream/75 leading-relaxed">Jazz dates across the Lansing capital region, the Detroit jazz scene, Grand Rapids supper clubs, Ann Arbor restaurants, and venues in between.</p>
+    <p class="todo">Aaron — when you have Grant's actual jazz history, I'll name specific rooms (Cliff Bell's, Dirty Dog, Moriarty's, etc.) for SEO authority.</p>
+  </div>
+</section>
+
+<section class="py-24 border-t border-rule text-center">
+  <div class="container-x">
+    <h2 class="display text-4xl lg:text-5xl">Need a bassist <span class="italic text-gold">on the stand?</span></h2>
+    <a href="/contact/" class="btn btn-gold mt-10">Check the date</a>
+  </div>
+</section>
+</BaseLayout>

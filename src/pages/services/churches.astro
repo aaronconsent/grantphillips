@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
+const schema = {"@context":"https://schema.org","@type":"Service","serviceType":"Church & Sacred Music Double Bass","provider":{"@type":"Person","name":"Grant Dewell Phillips"},"areaServed":{"@type":"State","name":"Michigan"}};
+---
+<BaseLayout
+  title="Church Double Bass — Sacred & Liturgical Music | Michigan"
+  description="Double bassist available for church services, Holy Week, Christmas Eve, Easter Vigil, and special liturgical music across central and southeast Michigan."
+  schema={schema}
+>
+
+<Hero
+  eyebrow="Churches & Sacred Music"
+  title="The grounded line under <span class='italic text-gold'>the hymn</span>."
+  lede="Music directors across Michigan call when they need a trained bassist who can sight-read a hymnal, blend with the organ, and never make the choir wait. Available for individual services and full liturgical seasons."
+>
+  <div class="mt-10"><a href="/contact/" class="btn btn-gold">Request a service</a></div>
+</Hero>
+
+<section class="pb-24">
+  <div class="container-x max-w-4xl">
+    <h2 class="display text-3xl lg:text-4xl">Services and <span class="italic text-gold">seasons</span>.</h2>
+    <div class="mt-10 grid md:grid-cols-3 gap-6">
+      <div class="card-dark"><p class="eyebrow mb-3">Christmas</p><h3 class="font-display text-xl text-cream mb-3">Lessons &amp; Carols · Christmas Eve · Christmas Day</h3><p class="text-sm text-cream/65">Brass-and-bass anthems, Bach cantatas, hymn descants, processional fanfares.</p></div>
+      <div class="card-dark"><p class="eyebrow mb-3">Holy Week</p><h3 class="font-display text-xl text-cream mb-3">Maundy Thursday · Good Friday · Easter Vigil · Easter</h3><p class="text-sm text-cream/65">Passion accompaniments, vigil instrumental settings, full Easter morning brass-and-strings.</p></div>
+      <div class="card-dark"><p class="eyebrow mb-3">Year-round</p><h3 class="font-display text-xl text-cream mb-3">Weekly liturgy · Funerals · Memorials</h3><p class="text-sm text-cream/65">Sunday service support, hymnal accompaniment, instrumental preludes and postludes.</p></div>
+    </div>
+
+    <h2 class="display text-3xl lg:text-4xl mt-20">Traditions worked with.</h2>
+    <div class="mt-6">
+      <span class="tag">Roman Catholic</span><span class="tag">Episcopal / Anglican</span>
+      <span class="tag">Lutheran (ELCA &amp; LCMS)</span><span class="tag">Methodist</span>
+      <span class="tag">Presbyterian</span><span class="tag">Non-denominational worship band</span>
+      <span class="tag">Reformed</span>
+    </div>
+
+    <h2 class="display text-3xl lg:text-4xl mt-20">What makes a bassist easy to work with at a church.</h2>
+    <ul class="mt-6 space-y-3 text-cream/80">
+      <li><span class="text-gold">⌁</span> <strong class="text-cream">Reads anything you put in front of him</strong> — score, hymnal, chord chart, lead sheet.</li>
+      <li><span class="text-gold">⌁</span> <strong class="text-cream">Knows when to drop out.</strong> Supports a cappella moments by stepping back.</li>
+      <li><span class="text-gold">⌁</span> <strong class="text-cream">Tunes with the organ in advance</strong> — arrives 60 minutes before downbeat.</li>
+      <li><span class="text-gold">⌁</span> <strong class="text-cream">Black-attire ready</strong> for processional or balcony placement.</li>
+      <li><span class="text-gold">⌁</span> <strong class="text-cream">Quiet logistics.</strong> One trip in, no spectacle, gone by the time fellowship starts.</li>
+    </ul>
+
+    <h2 class="display text-3xl lg:text-4xl mt-20">Available for full-season retainers.</h2>
+    <p class="mt-6 text-cream/75 leading-relaxed">If your music ministry needs a reliable bassist for a Lent–Easter or Advent–Christmas run, Grant offers season packages at a reduced per-service rate. Especially useful for parishes that pull together a brass-and-strings ensemble at the high holy days but lack a regular bass chair.</p>
+  </div>
+</section>
+
+<section class="py-24 border-t border-rule text-center">
+  <div class="container-x">
+    <h2 class="display text-4xl lg:text-5xl">Music director? <span class="italic text-gold">Let's talk</span>.</h2>
+    <a href="/contact/" class="btn btn-gold mt-10">Send service details</a>
+  </div>
+</section>
+</BaseLayout>

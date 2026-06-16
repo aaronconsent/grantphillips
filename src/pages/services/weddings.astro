@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
+
+const schema = {
+  "@context":"https://schema.org","@type":"Service",
+  "serviceType":"Wedding Double Bass Performance",
+  "provider":{"@type":"Person","name":"Grant Dewell Phillips"},
+  "areaServed":{"@type":"State","name":"Michigan"},
+  "description":"Live double bass for wedding ceremonies, cocktail hours, and receptions throughout central Michigan."
+};
+---
+<BaseLayout
+  title="Wedding Double Bass — Ceremonies & Receptions | Michigan"
+  description="Hire a Master of Music double bassist for your Michigan wedding. Ceremony processional, cocktail hour, reception — solo bass, duos, and string ensembles."
+  schema={schema}
+>
+
+<Hero
+  eyebrow="Weddings"
+  title="A double bass changes <span class='italic text-gold'>how a room feels</span>."
+  lede="Live, acoustic, warm — and unlike a quartet or DJ, the bass shapes the air without competing with conversation. For Michigan couples planning a ceremony and reception, Grant offers solo bass and ensemble options that travel from chapel to cocktail hour."
+>
+  <div class="mt-10"><a href="/contact/" class="btn btn-gold">Check my date</a></div>
+</Hero>
+
+<section class="pb-24">
+  <div class="container-x max-w-4xl">
+    <h2 class="display text-3xl lg:text-4xl">Three places the bass fits a <span class="italic text-gold">wedding day</span>.</h2>
+    <div class="mt-10 grid md:grid-cols-3 gap-6">
+      <div class="card-dark"><p class="eyebrow mb-3">Ceremony</p><h3 class="font-display text-xl text-cream mb-3">Prelude · Processional · Recessional</h3><p class="text-sm text-cream/65">Pachelbel Canon, Bach Air, Wagner Bridal Chorus — solo or paired with cello, harp, or violin. Outdoor ceremonies fully supported with amplification.</p></div>
+      <div class="card-dark"><p class="eyebrow mb-3">Cocktail Hour</p><h3 class="font-display text-xl text-cream mb-3">Background that elevates</h3><p class="text-sm text-cream/65">Jazz standards, bossa nova, light classical. Bass-led trio or duo holds the room at the perfect volume — present, not pushy.</p></div>
+      <div class="card-dark"><p class="eyebrow mb-3">Reception</p><h3 class="font-display text-xl text-cream mb-3">Dinner &amp; toasts</h3><p class="text-sm text-cream/65">Quiet enough for speeches, lively enough for the room. First-dance and special-request arrangements available.</p></div>
+    </div>
+
+    <h2 class="display text-3xl lg:text-4xl mt-20">Common formats Michigan couples request.</h2>
+    <ul class="mt-6 space-y-3 text-cream/80">
+      <li><span class="text-gold">⌁</span> <strong class="text-cream">Solo double bass</strong> — intimate ceremonies, courthouse weddings, micro-weddings.</li>
+      <li><span class="text-gold">⌁</span> <strong class="text-cream">Bass &amp; cello duo</strong> — sweet spot for processionals and small chapels.</li>
+      <li><span class="text-gold">⌁</span> <strong class="text-cream">Bass &amp; guitar duo</strong> — vineyard, barn, outdoor ceremonies; jazz cocktail hours.</li>
+      <li><span class="text-gold">⌁</span> <strong class="text-cream">Jazz trio (piano/bass/drums)</strong> — cocktail hour and dinner reception.</li>
+      <li><span class="text-gold">⌁</span> <strong class="text-cream">String quartet + bass</strong> — full-bodied processional sound for cathedral and larger venues.</li>
+    </ul>
+
+    <div class="my-16 border-l-2 border-gold pl-6">
+      <p class="font-display italic text-2xl text-cream leading-snug">"He arrived an hour early, dressed perfectly, played our processional from memory, and made our small chapel feel like a cathedral."</p>
+      <cite class="not-italic block mt-4 text-xs tracking-ultra uppercase text-cream/50">— Sample testimonial slot</cite>
+    </div>
+
+    <h2 class="display text-3xl lg:text-4xl">Questions couples ask.</h2>
+    <details class="faq mt-6"><summary>Can you play our specific song?</summary><div class="answer">Yes — most popular and classical wedding pieces are in the standard book; custom arrangements available with two weeks of lead time.</div></details>
+    <details class="faq"><summary>Do you travel to our venue?</summary><div class="answer">Anywhere within roughly 100 miles of East Lansing is routine — Grand Rapids, Ann Arbor, Detroit metro, Kalamazoo. Further dates possible; ask.</div></details>
+    <details class="faq"><summary>Will you coordinate with our planner / officiant?</summary><div class="answer">Always. A short call or email exchange the week of the event covers timing, processional cues, and any special moments.</div></details>
+  </div>
+</section>
+
+<section class="py-24 border-t border-rule text-center">
+  <div class="container-x">
+    <h2 class="display text-4xl lg:text-5xl">Have a <span class="italic text-gold">wedding date?</span></h2>
+    <a href="/contact/" class="btn btn-gold mt-10">Check availability</a>
+  </div>
+</section>
+
+</BaseLayout>

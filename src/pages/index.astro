@@ -1,0 +1,160 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Grant Dewell Phillips",
+  "givenName": "Grant",
+  "additionalName": "Dewell",
+  "familyName": "Phillips",
+  "jobTitle": "Double Bassist",
+  "description": "Classical and jazz double bassist, Master of Music candidate at Michigan State University College of Music. Available for weddings, sacred music, jazz, and orchestral engagements across Michigan's lower peninsula.",
+  "url": "https://grantphillipsbass.com/",
+  "alumniOf": [
+    { "@type": "CollegeOrUniversity", "name": "University of Michigan School of Music, Theatre & Dance" },
+    { "@type": "CollegeOrUniversity", "name": "Michigan State University College of Music" }
+  ],
+  "knowsAbout": ["Double Bass","Classical Music","Jazz","Orchestral Performance","Chamber Music","Sacred Music","Wedding Music"],
+  "address": { "@type": "PostalAddress", "addressLocality": "East Lansing", "addressRegion": "MI", "addressCountry": "US" },
+  "areaServed": [
+    {"@type":"City","name":"East Lansing, MI"},{"@type":"City","name":"Lansing, MI"},
+    {"@type":"City","name":"Grand Rapids, MI"},{"@type":"City","name":"Ann Arbor, MI"},
+    {"@type":"City","name":"Detroit, MI"},{"@type":"City","name":"Kalamazoo, MI"},
+    {"@type":"City","name":"Jackson, MI"},{"@type":"City","name":"Flint, MI"}
+  ],
+  "makesOffer": [
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Wedding Ceremony & Reception Double Bass"}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Church & Sacred Music Double Bass"}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Jazz Club & Restaurant Performance"}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Orchestral Subbing & Chamber Music"}}
+  ]
+};
+
+const services = [
+  { tag: 'Weddings', title: 'Ceremony &amp; cocktail hour', body: 'Processional, recessional, and cocktail-hour sets — solo bass or paired with cello, harp, or guitar.', href: '/services/weddings/' },
+  { tag: 'Churches', title: 'Sacred &amp; liturgical', body: 'Holy Week, Christmas Eve, Easter Vigil, and weekly services. Reads from full score or chord chart.', href: '/services/churches/' },
+  { tag: 'Jazz', title: 'Clubs &amp; restaurants', body: 'Walking bass for the standards book, brushes-and-bass duos, trio and quartet work.', href: '/services/jazz/' },
+  { tag: 'Orchestral', title: 'Subbing &amp; chamber', body: 'Regional symphony substitution, chamber recitals, pit orchestras. Conservatory-trained reliability.', href: '/services/orchestral/' },
+];
+---
+<BaseLayout
+  title="Grant Dewell Phillips — Double Bassist | East Lansing, MI"
+  description="Master of Music double bassist at Michigan State University. Available for weddings, churches, jazz clubs, and orchestral engagements throughout Michigan's lower peninsula."
+  schema={schema}
+>
+
+<Hero
+  variant="home"
+  eyebrow="Double Bass · Classical & Jazz · East Lansing, Michigan"
+  title="Grounded sound for<br/>ceremonies,<br/><span class='text-gold italic'>sanctuaries</span>, and stages."
+  lede="A Master of Music double bassist at Michigan State University, available to perform at weddings, churches, jazz clubs, and orchestral engagements within a 100-mile radius of East Lansing."
+>
+  <div class="mt-10 flex flex-col sm:flex-row gap-4">
+    <a href="/contact/" class="btn btn-gold">Request a date</a>
+    <a href="/performances/" class="btn btn-ghost">Performance history</a>
+  </div>
+</Hero>
+
+<!-- Marquee credentials -->
+<section class="border-y border-rule py-8 overflow-hidden">
+  <div class="container-x grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+    <div>
+      <p class="font-display text-3xl text-gold">M.M.</p>
+      <p class="text-[0.65rem] tracking-ultra uppercase text-cream/50 mt-1">MSU College of Music</p>
+    </div>
+    <div>
+      <p class="font-display text-3xl text-gold">U-M</p>
+      <p class="text-[0.65rem] tracking-ultra uppercase text-cream/50 mt-1">SMTD · N. Walker studio</p>
+    </div>
+    <div>
+      <p class="font-display text-3xl text-gold">2× All-State</p>
+      <p class="text-[0.65rem] tracking-ultra uppercase text-cream/50 mt-1">TMEA 2018 · 2019</p>
+    </div>
+    <div>
+      <p class="font-display text-3xl text-gold">100 mi</p>
+      <p class="text-[0.65rem] tracking-ultra uppercase text-cream/50 mt-1">Coverage radius</p>
+    </div>
+  </div>
+</section>
+
+<!-- What I do -->
+<section class="py-24 lg:py-32">
+  <div class="container-x">
+    <p class="eyebrow">What I bring to your event</p>
+    <h2 class="display text-4xl lg:text-5xl mt-4 max-w-3xl">Four ways the double bass <span class="text-gold italic">elevates</span> a room.</h2>
+
+    <div class="mt-16 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {services.map(s => (
+        <a href={s.href} class="card-dark group flex flex-col">
+          <p class="text-[0.7rem] tracking-ultra uppercase text-gold mb-4">{s.tag}</p>
+          <h3 class="font-display text-2xl text-cream mb-3" set:html={s.title} />
+          <p class="text-sm text-cream/65 leading-relaxed flex-1">{s.body}</p>
+          <p class="mt-6 text-xs tracking-wider uppercase text-gold group-hover:translate-x-1 transition">Explore →</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- About teaser -->
+<section class="py-24 lg:py-32 border-y border-rule bg-ink-2/40">
+  <div class="container-x grid lg:grid-cols-12 gap-12 items-center">
+    <div class="lg:col-span-7">
+      <p class="eyebrow">About Grant</p>
+      <h2 class="display text-4xl lg:text-5xl mt-4">A bassist trained in the orchestra, fluent in <span class="italic text-gold">the standards</span>.</h2>
+      <p class="mt-8 text-cream/75 text-lg leading-relaxed">
+        Grant came up through Houston's Kinder HSPVA, earned back-to-back Texas All-State selections (Symphonic Band, 2018; Symphony Orchestra, 2019), and completed a dual major in astrophysics and orchestral music at the University of Michigan in the studio of Professor Nicholas Walker — a Fulbright Scholar and past president of the International Society of Bassists. He's now a graduate-level performer in the MSU Symphony Orchestra.
+      </p>
+      <p class="mt-8">
+        <a href="/about/" class="text-gold hover:underline tracking-wider text-sm uppercase">Read the full bio →</a>
+      </p>
+    </div>
+    <div class="lg:col-span-5">
+      <div class="border-l-2 border-gold pl-8 py-2">
+        <p class="font-display italic text-2xl lg:text-3xl leading-snug text-cream">"The double bass is the architecture of an ensemble — the floor the rest of the music stands on. My job is to make that floor feel solid, whether the room knows I'm there or not."</p>
+        <cite class="block not-italic mt-6 text-xs tracking-ultra uppercase text-cream/50">— Grant Dewell Phillips</cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Coverage -->
+<section class="py-24">
+  <div class="container-x">
+    <p class="eyebrow">Coverage area</p>
+    <h2 class="display text-4xl lg:text-5xl mt-4 max-w-3xl">Available within <span class="text-gold italic">100 miles</span> of East Lansing.</h2>
+    <p class="mt-6 max-w-2xl text-cream/65">Routine travel for weddings, services, and bookings throughout Michigan's lower peninsula. Dates further afield possible with enough lead time.</p>
+
+    <div class="mt-12 grid md:grid-cols-3 gap-6">
+      <div class="card-dark">
+        <h3 class="font-display text-xl text-cream mb-3">Capital region</h3>
+        <p class="text-sm text-cream/60 leading-relaxed"><a href="/areas/east-lansing/" class="text-cream/90 hover:text-gold">East Lansing</a> · <a href="/areas/lansing/" class="text-cream/90 hover:text-gold">Lansing</a> · Okemos · Haslett · Mason · Charlotte · St. Johns</p>
+      </div>
+      <div class="card-dark">
+        <h3 class="font-display text-xl text-cream mb-3">West Michigan</h3>
+        <p class="text-sm text-cream/60 leading-relaxed"><a href="/areas/grand-rapids/" class="text-cream/90 hover:text-gold">Grand Rapids</a> · Kalamazoo · Battle Creek · Holland · Portage</p>
+      </div>
+      <div class="card-dark">
+        <h3 class="font-display text-xl text-cream mb-3">Southeast Michigan</h3>
+        <p class="text-sm text-cream/60 leading-relaxed"><a href="/areas/ann-arbor/" class="text-cream/90 hover:text-gold">Ann Arbor</a> · <a href="/areas/detroit/" class="text-cream/90 hover:text-gold">Detroit metro</a> · Jackson · Brighton · Howell · Plymouth</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="py-24 lg:py-32">
+  <div class="container-x text-center">
+    <div class="rule-gold w-32 mx-auto mb-10"></div>
+    <p class="eyebrow">Booking inquiries</p>
+    <h2 class="display text-4xl lg:text-6xl mt-4">Have a date <span class="italic text-gold">in mind?</span></h2>
+    <p class="mt-6 max-w-xl mx-auto text-cream/70">Tell me the venue, time, and what you want the music to feel like — I'll reply with availability and a flat-rate quote within one business day.</p>
+    <div class="mt-10">
+      <a href="/contact/" class="btn btn-gold">Request a booking</a>
+    </div>
+  </div>
+</section>
+
+</BaseLayout>

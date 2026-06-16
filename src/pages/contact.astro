@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+---
+<BaseLayout
+  title="Book Grant Phillips — Double Bass for Hire | East Lansing, MI"
+  description="Request a booking for Grant Dewell Phillips, double bassist. Weddings, churches, jazz clubs, orchestral subbing across Michigan. One-business-day reply."
+>
+
+<Hero
+  eyebrow="Booking"
+  title="Request <span class='italic text-gold'>a date</span>."
+  lede="Tell me what you're planning and I'll reply within one business day with availability and a flat-rate quote. No deposit required to check the date."
+/>
+
+<section class="pb-24">
+  <div class="container-x grid lg:grid-cols-12 gap-12 lg:gap-20">
+    <div class="lg:col-span-7">
+      <form action="https://formspree.io/f/REPLACE_WITH_FORM_ID" method="POST" class="max-w-xl">
+        <label for="name">Your name</label>
+        <input id="name" name="name" required>
+
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required>
+
+        <label for="phone">Phone (optional)</label>
+        <input id="phone" name="phone" type="tel">
+
+        <label for="event-type">Event type</label>
+        <select id="event-type" name="event_type">
+          <option>Wedding ceremony</option>
+          <option>Wedding reception / cocktail hour</option>
+          <option>Church service or sacred music</option>
+          <option>Jazz club / restaurant date</option>
+          <option>Orchestral subbing</option>
+          <option>Chamber recital</option>
+          <option>Private party / corporate event</option>
+          <option>Funeral / memorial</option>
+          <option>Other</option>
+        </select>
+
+        <label for="date">Date of event</label>
+        <input id="date" name="date" type="date">
+
+        <label for="venue">Venue & city</label>
+        <input id="venue" name="venue" placeholder="e.g., Cathedral of St. Andrew, Grand Rapids">
+
+        <label for="message">Tell me about the event</label>
+        <textarea id="message" name="message" rows="6" placeholder="Time, length of performance, repertoire requests, anything else helpful." required></textarea>
+
+        <button type="submit" class="btn btn-gold mt-8 w-full sm:w-auto">Send booking request</button>
+      </form>
+      <p class="mt-8 text-sm text-cream/50">Or email directly: <a href="mailto:booking@grantphillipsbass.com" class="text-gold">booking@grantphillipsbass.com</a></p>
+    </div>
+
+    <aside class="lg:col-span-5 space-y-6">
+      <div class="card-dark">
+        <p class="text-[0.7rem] tracking-ultra uppercase text-gold mb-3">To confirm a date</p>
+        <ul class="space-y-2 text-cream/75 text-sm">
+          <li>Date, start time, total time on site</li>
+          <li>Venue address (or "TBD — within X miles of ___")</li>
+          <li>Style: solo, duo, trio, quartet</li>
+          <li>Specific pieces (processional, hymns, jazz tunes)</li>
+          <li>Whether amplification is required</li>
+        </ul>
+      </div>
+      <div class="card-dark">
+        <p class="text-[0.7rem] tracking-ultra uppercase text-gold mb-3">Typical lead time</p>
+        <ul class="space-y-2 text-cream/75 text-sm">
+          <li><strong class="text-cream">Weddings:</strong> 3–12 months ideal</li>
+          <li><strong class="text-cream">Church:</strong> 2–6 weeks</li>
+          <li><strong class="text-cream">Jazz / restaurant:</strong> 1–4 weeks</li>
+          <li><strong class="text-cream">Orchestral subs:</strong> 48 hours possible</li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+</section>
+
+</BaseLayout>

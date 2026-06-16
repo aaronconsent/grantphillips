@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(212,168,87,0.06), transparent 60%),
+      #0a0a0a;
+    background-attachment: fixed;
+    overflow-x: hidden;
+  }
+  ::selection { background: #d4a857; color: #0a0a0a; }
+  :focus-visible { outline: 2px solid #d4a857; outline-offset: 3px; border-radius: 2px; }
+  img, svg, video { max-width: 100%; height: auto; display: block; }
+}
+
+@layer components {
+  .container-x { @apply max-w-7xl mx-auto px-5 sm:px-8 lg:px-10; }
+  .prose-x { @apply max-w-prose; }
+
+  .eyebrow {
+    @apply text-[0.7rem] font-semibold tracking-ultra uppercase text-gold;
+  }
+
+  .display {
+    @apply font-display font-light leading-[1.05] tracking-tight;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2
+           px-7 py-4 min-h-[52px] font-semibold text-sm tracking-wider uppercase
+           transition-all duration-200 border;
+  }
+  .btn-gold {
+    @apply bg-gold text-ink border-gold hover:bg-transparent hover:text-gold;
+  }
+  .btn-ghost {
+    @apply bg-transparent text-cream border-rule hover:border-gold hover:text-gold;
+  }
+
+  .rule-gold { @apply h-px bg-gradient-to-r from-transparent via-gold to-transparent; }
+
+  .card-dark {
+    @apply bg-ink-2 border border-rule rounded-sm p-7 transition
+           hover:border-gold/50;
+  }
+
+  .nav-link {
+    @apply text-sm text-cream/80 hover:text-gold transition relative;
+  }
+
+  details.faq summary {
+    @apply font-display text-xl text-cream cursor-pointer list-none py-5 pr-10 relative;
+  }
+  details.faq summary::-webkit-details-marker { display: none; }
+  details.faq summary::after {
+    content: '+'; @apply absolute right-0 top-1/2 -translate-y-1/2 text-gold text-2xl leading-none;
+  }
+  details.faq[open] summary::after { content: '\2013'; }
+  details.faq { @apply border-b border-rule; }
+  details.faq .answer { @apply pt-2 pb-6 text-cream/70; }
+
+  .gig {
+    @apply grid grid-cols-[80px_1fr] sm:grid-cols-[100px_1fr_auto] gap-x-6 gap-y-1
+           py-6 border-b border-rule;
+  }
+  .gig-year { @apply font-display text-2xl text-gold; }
+  .gig-title { @apply font-medium text-cream; }
+  .gig-venue { @apply text-sm text-cream/60 col-start-2 sm:col-start-2; }
+  .gig-role { @apply text-xs uppercase tracking-wider text-cream/50 col-start-2 sm:col-start-3 sm:text-right; }
+
+  .tag {
+    @apply inline-block text-xs tracking-wide
+           border border-rule rounded-full px-3 py-1 mr-1 mb-1 text-cream/70;
+  }
+
+  .todo {
+    @apply bg-gold/10 border border-gold/30 rounded-sm px-4 py-3 text-sm text-gold/90 my-4;
+  }
+  .todo::before { content: 'TODO — '; font-weight: 700; }
+
+  form input, form select, form textarea {
+    @apply w-full bg-ink-2 border border-rule rounded-sm px-4 py-3.5
+           text-cream text-base placeholder:text-cream/30
+           focus:border-gold focus:outline-none transition;
+  }
+  form label {
+    @apply block text-xs tracking-wider uppercase text-cream/60 mb-2 mt-5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

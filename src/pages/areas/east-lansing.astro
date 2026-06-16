@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
+---
+<BaseLayout
+  title="Double Bassist in East Lansing, MI | Grant Phillips"
+  description="Hire a double bassist in East Lansing, Michigan. Grant Dewell Phillips is a Master of Music student at MSU available for weddings, churches, jazz, and orchestral work locally."
+>
+<Hero
+  eyebrow="East Lansing, Michigan"
+  title="The <span class='italic text-gold'>local</span> bassist."
+  lede="Grant lives in East Lansing and studies at the MSU College of Music. For weddings, services, and gigs anywhere in greater Lansing, he's the bassist with no travel premium."
+>
+  <div class="mt-10"><a href="/contact/" class="btn btn-gold">Book locally</a></div>
+</Hero>
+
+<section class="pb-24">
+  <div class="container-x max-w-3xl">
+    <h2 class="display text-3xl text-gold">What's nearby</h2>
+    <ul class="mt-6 space-y-3 text-cream/75 leading-relaxed">
+      <li><strong class="text-cream">MSU &amp; Wharton Center</strong> — Cobb Great Hall, Pasant Theatre</li>
+      <li><strong class="text-cream">Churches</strong> — All Saints Episcopal, St. Thomas Aquinas, University Lutheran, Peoples Church, MSU Alumni Memorial Chapel</li>
+      <li><strong class="text-cream">Wedding venues</strong> — Kellogg Hotel, English Inn (Eaton Rapids), Eagle Eye, University Club</li>
+      <li><strong class="text-cream">Restaurants &amp; rooms</strong> — Peanut Barrel, Tin Can, Crunchy's, hotel lobbies</li>
+    </ul>
+    <h2 class="display text-3xl text-gold mt-16">Services here</h2>
+    <ul class="mt-6 space-y-2">
+      <li><a href="/services/weddings/" class="text-cream hover:text-gold">Wedding ceremonies &amp; receptions →</a></li>
+      <li><a href="/services/churches/" class="text-cream hover:text-gold">Church &amp; sacred music →</a></li>
+      <li><a href="/services/jazz/" class="text-cream hover:text-gold">Jazz clubs &amp; lounges →</a></li>
+      <li><a href="/services/orchestral/" class="text-cream hover:text-gold">Orchestral subbing &amp; chamber →</a></li>
+    </ul>
+    <p class="mt-12 text-cream/50 text-sm">Also covers <a href="/areas/lansing/" class="text-gold">Lansing</a> · <a href="/areas/grand-rapids/" class="text-gold">Grand Rapids</a> · <a href="/areas/ann-arbor/" class="text-gold">Ann Arbor</a> · <a href="/areas/detroit/" class="text-gold">Detroit metro</a>.</p>
+  </div>
+</section>
+</BaseLayout>

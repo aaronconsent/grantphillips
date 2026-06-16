@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "mainEntity": {
+    "@type": "Person",
+    "name": "Grant Dewell Phillips",
+    "jobTitle": "Double Bassist",
+    "alumniOf": [
+      "University of Michigan School of Music, Theatre & Dance",
+      "Michigan State University College of Music"
+    ]
+  }
+};
+---
+<BaseLayout
+  title="About Grant Phillips — Double Bassist, MSU College of Music"
+  description="Master of Music double bassist at Michigan State University. Bio, training, repertoire, and what to expect when you book Grant Phillips."
+  schema={schema}
+>
+
+<Hero
+  eyebrow="About"
+  title="The long version."
+  lede="Grant Dewell Phillips is a double bassist and Master of Music candidate at the Michigan State University College of Music. He has performed continuously since middle school, building a reputation for reliability, musicianship, and a tone that anchors any ensemble he joins."
+>
+  <p class="mt-6"><span class="inline-block bg-gold text-ink px-4 py-1.5 text-xs tracking-ultra uppercase font-semibold">Currently · M.M. candidate at MSU</span></p>
+</Hero>
+
+<section class="pb-24">
+  <div class="container-x grid lg:grid-cols-12 gap-12">
+    <div class="lg:col-span-8 lg:col-start-2">
+      <p class="eyebrow">Biography</p>
+      <h2 class="display text-4xl lg:text-5xl mt-4">From a first instrument to a <span class="italic text-gold">graduate degree</span>.</h2>
+
+      <div class="mt-10 space-y-7 text-lg text-cream/80 leading-relaxed">
+        <p>Grant Phillips' path to the double bass began with a move. In 2008, his family relocated to Houston, Texas, where he enrolled in a school that asked every student to commit to an artistic discipline. He chose the double bass — a decision that would change the course of his life.</p>
+
+        <p>Under the guidance of his first teacher, <span class="text-gold">Charles Tittsworth</span>, that early choice grew into a serious pursuit. Through elementary and middle school, Grant rose to first chair again and again, building the foundation that would carry him into one of the country's most competitive arts high schools. At Houston's renowned <span class="text-gold">Kinder High School for the Performing and Visual Arts (HSPVA)</span>, he continued his studies with <span class="text-gold">Eric Larson</span>, a double bassist of the Houston Symphony — training with a working professional that helped propel him to the highest level of student music in Texas. He was named to the Texas All-State Symphonic Band in 2018 and the Texas All-State Symphony Orchestra in 2019, the top tier of a grueling, multi-round audition process, performing both years at the Texas Music Educators Association convention in San Antonio.</p>
+
+        <p>After graduating from HSPVA, Grant took an ambitious next step that reflected both sides of his mind. At the University of Michigan, he pursued a dual major in <span class="text-gold">astrophysics and orchestral music</span>, completing both degrees over five years while studying double bass in the studio of <span class="text-gold">Professor Nicholas Walker</span> — a Fulbright Scholar and past president of the International Society of Bassists. In November 2023, he gave a solo recital at U-M's School of Music, Theatre &amp; Dance.</p>
+
+        <p>Today, Grant continues his journey at Michigan State University, performing with orchestras throughout the Ann Arbor and Lansing area — still following the instrument he chose as a kid newly arrived in Houston, and still letting it carry him somewhere new.</p>
+      </div>
+
+      <div class="rule-gold w-32 my-20"></div>
+
+      <p class="eyebrow">Professional experience</p>
+      <h2 class="display text-3xl lg:text-4xl mt-4">Selected appointments &amp; engagements.</h2>
+      <p class="todo">Aaron / Grant: send any of the entries below and I'll populate. Empty placeholder slots stay as TBD in the source until populated.</p>
+
+      <h3 class="font-display text-2xl text-gold mt-12 mb-4">Orchestral positions &amp; section work</h3>
+      <ul>
+        <li class="gig"><span class="gig-year">2025–</span><div><p class="gig-title">MSU Symphony Orchestra</p><p class="gig-venue">Michigan State University College of Music · East Lansing, MI</p></div><p class="gig-role">Graduate Bassist</p></li>
+        <li class="gig"><span class="gig-year">2020–24</span><div><p class="gig-title">U-M Symphony / Philharmonia / Chamber</p><p class="gig-venue">U-M School of Music, Theatre &amp; Dance · Ann Arbor, MI</p></div><p class="gig-role">Bassist</p></li>
+        <li class="gig"><span class="gig-year">[yr]</span><div><p class="gig-title">[Regional orchestra subbing roster]</p><p class="gig-venue">[Orchestra · City]</p></div><p class="gig-role">Substitute Bass</p></li>
+      </ul>
+
+      <h3 class="font-display text-2xl text-gold mt-12 mb-4">Solo &amp; chamber appearances</h3>
+      <ul>
+        <li class="gig"><span class="gig-year">2023</span><div><p class="gig-title">Solo Double Bass Recital</p><p class="gig-venue">U-M SMTD · Ann Arbor, MI · November 4, 2023</p></div><p class="gig-role">Soloist</p></li>
+        <li class="gig"><span class="gig-year">[yr]</span><div><p class="gig-title">[Chamber recital / concerto appearance]</p><p class="gig-venue">[Venue]</p></div><p class="gig-role">Bassist</p></li>
+      </ul>
+
+      <h3 class="font-display text-2xl text-gold mt-12 mb-4">Honors &amp; selections</h3>
+      <ul>
+        <li class="gig"><span class="gig-year">2019</span><div><p class="gig-title">TMEA All-State Symphony Orchestra</p><p class="gig-venue">Texas Music Educators Association · San Antonio, TX</p></div><p class="gig-role">String Bass</p></li>
+        <li class="gig"><span class="gig-year">2018</span><div><p class="gig-title">TMEA All-State Symphonic Band</p><p class="gig-venue">Texas Music Educators Association · San Antonio, TX</p></div><p class="gig-role">String Bass</p></li>
+      </ul>
+
+      <h3 class="font-display text-2xl text-gold mt-12 mb-4">Festivals, masterclasses, teaching</h3>
+      <ul>
+        <li class="gig"><span class="gig-year">[yr]</span><div><p class="gig-title">[Festival / masterclass / studio teaching role]</p><p class="gig-venue">[Where]</p></div><p class="gig-role">[Role]</p></li>
+      </ul>
+
+      <div class="rule-gold w-32 my-20"></div>
+
+      <h2 class="display text-3xl lg:text-4xl">What he brings to a booking.</h2>
+      <ul class="mt-8 space-y-4 text-cream/80">
+        <li><span class="text-gold">⌁</span> <strong class="text-cream">Conservatory-grade reading.</strong> Sight-reads orchestral parts, lead sheets, and figured bass.</li>
+        <li><span class="text-gold">⌁</span> <strong class="text-cream">Stylistic range.</strong> Classical, jazz, sacred music, pop/folk crossover, arranged accompaniment.</li>
+        <li><span class="text-gold">⌁</span> <strong class="text-cream">Professional logistics.</strong> Black-tie by default, own transportation and amplifier, arrives 60 minutes before downbeat.</li>
+        <li><span class="text-gold">⌁</span> <strong class="text-cream">Flexible instrumentation.</strong> Solo, duo, trio, quartet — collaborator network across Michigan.</li>
+        <li><span class="text-gold">⌁</span> <strong class="text-cream">Clear communication.</strong> One-business-day quote, written confirmation, single point of contact.</li>
+      </ul>
+
+      <h2 class="display text-3xl lg:text-4xl mt-16">Repertoire &amp; style.</h2>
+      <div class="mt-6">
+        <span class="tag">Orchestral standard rep</span>
+        <span class="tag">Chamber &amp; string quartet bass</span>
+        <span class="tag">Baroque continuo</span>
+        <span class="tag">Hymn &amp; liturgical</span>
+        <span class="tag">Christmas / Easter sacred</span>
+        <span class="tag">Wedding processional</span>
+        <span class="tag">Jazz standards (Real Book)</span>
+        <span class="tag">Bebop &amp; swing</span>
+        <span class="tag">Latin jazz / bossa</span>
+        <span class="tag">Brushes-and-bass duos</span>
+        <span class="tag">Singer-songwriter accompaniment</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-24 border-t border-rule">
+  <div class="container-x text-center">
+    <h2 class="display text-4xl lg:text-5xl">See where he's <span class="italic text-gold">played</span>.</h2>
+    <p class="mt-6 text-cream/70">A timeline of performances from middle school through graduate work.</p>
+    <a href="/performances/" class="btn btn-gold mt-10">Performance history</a>
+  </div>
+</section>
+
+</BaseLayout>

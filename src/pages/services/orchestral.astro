@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
+const schema = {"@context":"https://schema.org","@type":"Service","serviceType":"Orchestral Subbing & Chamber Music","provider":{"@type":"Person","name":"Grant Dewell Phillips"},"areaServed":{"@type":"State","name":"Michigan"}};
+---
+<BaseLayout
+  title="Orchestral Subbing & Chamber Music — Double Bass | Michigan"
+  description="Conservatory-trained double bassist available for orchestral subbing, pit orchestra, chamber recitals, and recording sessions across Michigan's lower peninsula."
+  schema={schema}
+>
+
+<Hero
+  eyebrow="Orchestral & Chamber"
+  title="A sub who shows up <span class='italic text-gold'>ready</span>."
+  lede="For personnel managers and concertmasters across Michigan regional orchestras: a Master of Music bassist out of MSU, available on short notice, who walks in with the part learned and the tuxedo ironed."
+>
+  <div class="mt-10"><a href="/contact/" class="btn btn-gold">Add Grant to your sub list</a></div>
+</Hero>
+
+<section class="pb-24">
+  <div class="container-x max-w-4xl">
+    <h2 class="display text-3xl lg:text-4xl">What I'm <span class="italic text-gold">available for</span>.</h2>
+    <div class="mt-10 grid md:grid-cols-3 gap-6">
+      <div class="card-dark"><p class="eyebrow mb-3">Symphony</p><h3 class="font-display text-xl text-cream mb-3">Regional orchestra subbing</h3><p class="text-sm text-cream/65">Single concerts, runouts, full sets. Standard and contemporary repertoire. Section reading, never holds a rehearsal up.</p></div>
+      <div class="card-dark"><p class="eyebrow mb-3">Pit</p><h3 class="font-display text-xl text-cream mb-3">Musical theater &amp; opera</h3><p class="text-sm text-cream/65">Reads pit books — community theater through professional touring. Available for runs.</p></div>
+      <div class="card-dark"><p class="eyebrow mb-3">Chamber</p><h3 class="font-display text-xl text-cream mb-3">Recitals &amp; sessions</h3><p class="text-sm text-cream/65">Chamber recitals, faculty collaborations, recording sessions. Quintets, octets, accompanied solo work.</p></div>
+    </div>
+
+    <h2 class="display text-3xl lg:text-4xl mt-20">Regional orchestras in range.</h2>
+    <ul class="mt-6 space-y-2 text-cream/75 leading-relaxed">
+      <li>Lansing Symphony · Jackson Symphony · Flint Symphony · Battle Creek Symphony</li>
+      <li>Grand Rapids Symphony · Holland Symphony · Kalamazoo Symphony</li>
+      <li>Ann Arbor Symphony · Plymouth Symphony · Livingston Symphony · Toledo Symphony (border)</li>
+      <li>Michigan Philharmonic · Dearborn · Warren · Rochester Symphony</li>
+      <li>Pit work for Wharton Center touring shows, Lansing Civic Light Opera</li>
+    </ul>
+
+    <h2 class="display text-3xl lg:text-4xl mt-20">Personnel manager checklist.</h2>
+    <ul class="mt-6 space-y-3 text-cream/80">
+      <li><span class="text-gold">⌁</span> Reads everything from Mozart to Adams cleanly at tempo</li>
+      <li><span class="text-gold">⌁</span> Owns a quality double bass; can borrow if you need a specific size</li>
+      <li><span class="text-gold">⌁</span> Black tails / black tie / all-black — whatever the contract says</li>
+      <li><span class="text-gold">⌁</span> Will be in the seat 30 minutes before downbeat with the part marked</li>
+      <li><span class="text-gold">⌁</span> Available on 48 hours' notice when scheduling allows</li>
+    </ul>
+  </div>
+</section>
+
+<section class="py-24 border-t border-rule text-center">
+  <div class="container-x">
+    <h2 class="display text-4xl lg:text-5xl">Need a bass <span class="italic text-gold">on the roster?</span></h2>
+    <a href="/contact/" class="btn btn-gold mt-10">Get in touch</a>
+  </div>
+</section>
+</BaseLayout>

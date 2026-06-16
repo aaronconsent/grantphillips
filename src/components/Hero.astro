@@ -1,0 +1,36 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  lede?: string;
+  variant?: 'home' | 'page';
+}
+const { eyebrow, title, lede, variant = 'page' } = Astro.props;
+const isHome = variant === 'home';
+---
+<section class:list={[
+  'relative overflow-hidden',
+  isHome ? 'min-h-[88vh] flex items-center pt-10 pb-20' : 'pt-24 pb-20 lg:pt-32 lg:pb-24'
+]}>
+  <!-- Atmospheric background -->
+  <div class="absolute inset-0 pointer-events-none">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-ink/40 to-ink"></div>
+    <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(circle at 1px 1px, #d4a857 1px, transparent 0); background-size: 32px 32px;"></div>
+    {isHome && (
+      <div class="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-gold/[0.06] blur-3xl"></div>
+      <div class="absolute -bottom-40 -left-20 w-[500px] h-[500px] rounded-full bg-gold/[0.04] blur-3xl"></div>
+    )}
+  </div>
+
+  <div class="container-x relative">
+    <p class="eyebrow mb-6">{eyebrow}</p>
+    <h1 class:list={[
+      'display text-cream',
+      isHome ? 'text-5xl sm:text-6xl md:text-7xl lg:text-8xl' : 'text-4xl sm:text-5xl lg:text-6xl'
+    ]} set:html={title} />
+    {lede && (
+      <p class="mt-8 max-w-2xl text-lg lg:text-xl text-cream/70 leading-relaxed">{lede}</p>
+    )}
+    <slot />
+  </div>
+</section>

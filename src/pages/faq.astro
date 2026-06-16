@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+
+const faqs = [
+  { q: "What does Grant charge for a wedding?", a: "Flat-rate quotes are sent within one business day of inquiry. Pricing depends on travel distance, total time on site, and whether amplification is required. Most central-Michigan ceremony-and-cocktail-hour packages fall in a predictable range — contact for a current quote." },
+  { q: "What's the coverage area?", a: "Routine bookings throughout a roughly 100-mile radius of East Lansing, MI — including Lansing, Grand Rapids, Kalamazoo, Battle Creek, Jackson, Ann Arbor, the Detroit metro, and Flint. Dates further afield are possible with enough lead time." },
+  { q: "Can Grant play in a duo, trio, or quartet?", a: "Yes. Solo double bass, bass-and-cello duo, jazz trio (piano/bass/drums or guitar/bass/drums), and string quartet with added bass are all available. Grant maintains relationships with collaborators across Michigan and can build the right ensemble for the event." },
+  { q: "What musical styles does he cover?", a: "Classical (orchestral standard repertoire, chamber, baroque continuo), sacred music (hymns, liturgical, Holy Week, Christmas), jazz (standards, bebop, swing, bossa, brushes-and-bass duos), and arranged accompaniment for pop, folk, and singer-songwriter work." },
+  { q: "Does he provide his own amplification?", a: "Yes. For outdoor ceremonies, larger reception spaces, and most jazz rooms, Grant brings a high-quality combo amp suited to upright bass. For acoustic chamber and orchestral work, no amplification is needed." },
+  { q: "How far in advance should I book?", a: "Weddings book best 3–12 months out. Church services typically 2–6 weeks. Jazz and restaurant dates often 1–4 weeks. Orchestral subbing can be confirmed on as little as 48 hours' notice." },
+  { q: "Is a deposit required?", a: "No deposit is required to check a date. A non-refundable retainer is requested to confirm the booking; remainder due on the day of the event." },
+  { q: "What does Grant wear to a performance?", a: "Standard attire is black tie or all-black formal. For specific dress codes (white tie, cocktail, themed events), let him know during booking." },
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(f => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a }
+  }))
+};
+---
+<BaseLayout
+  title="FAQ — Booking Grant Phillips, Double Bass"
+  description="Common questions about booking double bassist Grant Phillips: pricing, travel, instrumentation, repertoire, process."
+  schema={schema}
+>
+
+<Hero
+  eyebrow="FAQ"
+  title="Common <span class='italic text-gold'>questions</span>."
+  lede="Quick answers about pricing, coverage, instrumentation, and what to expect when you book Grant."
+/>
+
+<section class="pb-24">
+  <div class="container-x max-w-3xl">
+    {faqs.map(f => (
+      <details class="faq">
+        <summary>{f.q}</summary>
+        <div class="answer">{f.a}</div>
+      </details>
+    ))}
+  </div>
+</section>
+
+</BaseLayout>

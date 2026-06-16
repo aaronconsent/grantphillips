@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
+---
+<BaseLayout
+  title="Double Bassist in Detroit, MI | Grant Phillips"
+  description="Hire a Master of Music double bassist for Detroit metro weddings, jazz clubs, churches, and orchestral subbing. Routine bookings across SE Michigan."
+>
+<Hero
+  eyebrow="Detroit Metro"
+  title="For the city that <span class='italic text-gold'>built jazz bass</span>."
+  lede="Detroit's jazz lineage is part of why I play this instrument. From cathedral weddings in Birmingham to club dates in the Cass Corridor, I'm available across the metro."
+>
+  <div class="mt-10"><a href="/contact/" class="btn btn-gold">Book a Detroit date</a></div>
+</Hero>
+
+<section class="pb-24">
+  <div class="container-x max-w-3xl">
+    <h2 class="display text-3xl text-gold">Detroit-area venues &amp; ensembles</h2>
+    <ul class="mt-6 space-y-3 text-cream/75 leading-relaxed">
+      <li><strong class="text-cream">Jazz rooms</strong> — Cliff Bell's, Dirty Dog Jazz Cafe (Grosse Pointe), Baker's Keyboard Lounge, Jazz Cafe at Music Hall, Trinosophes</li>
+      <li><strong class="text-cream">Wedding venues</strong> — The Henry, Eastern Market venues, MGM Grand Detroit, Detroit Yacht Club, Meadow Brook Hall, The Westin Book Cadillac</li>
+      <li><strong class="text-cream">Cathedrals &amp; churches</strong> — Cathedral of the Most Blessed Sacrament, St. Paul Cathedral (Episcopal), Christ Church Grosse Pointe, Kirk in the Hills (Bloomfield Hills)</li>
+      <li><strong class="text-cream">Concert halls</strong> — Orchestra Hall (Max M. Fisher Music Center), Detroit Opera House, Fox Theatre</li>
+      <li><strong class="text-cream">Orchestras</strong> — Michigan Philharmonic, Dearborn Symphony, Warren Symphony, Rochester Symphony, Detroit Chamber Winds &amp; Strings</li>
+    </ul>
+    <h2 class="display text-3xl text-gold mt-16">Services across the metro</h2>
+    <ul class="mt-6 space-y-2">
+      <li><a href="/services/weddings/" class="text-cream hover:text-gold">Weddings →</a></li>
+      <li><a href="/services/churches/" class="text-cream hover:text-gold">Sacred music →</a></li>
+      <li><a href="/services/jazz/" class="text-cream hover:text-gold">Jazz — the most common ask in this market →</a></li>
+      <li><a href="/services/orchestral/" class="text-cream hover:text-gold">Orchestral subbing →</a></li>
+    </ul>
+  </div>
+</section>
+</BaseLayout>
