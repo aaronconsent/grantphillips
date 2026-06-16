@@ -80,6 +80,21 @@ grantphillipsbass/
 └── .nvmrc                              # Node 20
 ```
 
+## Feedback wizard
+
+Floating gold "Help improve this site" button (bottom-right on every page) opens a chat-style review wizard for Grant. Submits to **Web3Forms** with attached files.
+
+**Setup (one-time):**
+
+1. Create a free account at <https://web3forms.com>
+2. Copy your access key
+3. Open `src/components/FeedbackWizard.astro`, replace `REPLACE_WITH_WEB3FORMS_ACCESS_KEY` with the real key
+4. Commit + push — Cloudflare rebuilds
+
+**Direct link for Grant:** `https://grantphillipsbass.com/?feedback=1` auto-opens the wizard.
+
+Responses arrive as a single email to whatever address you signed up with on Web3Forms, with photos/programs attached (max 5 files, 5MB each — images auto-compress client-side to ~1600px / ~500KB).
+
 ## Outstanding content TODOs
 
 Search source for `class="todo"`:

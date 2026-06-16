@@ -1,0 +1,606 @@
+---
+// FeedbackWizard — chat-style review wizard for Grant.
+// Submits to Web3Forms; Aaron sets WEB3FORMS_ACCESS_KEY (see README).
+const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
+---
+<!-- Floating launcher -->
+<button id="fw-launcher" type="button" aria-label="Send feedback" class="fw-launcher hidden">
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 12c0-4.97 4.03-9 9-9s9 4.03 9 9-4.03 9-9 9c-1.4 0-2.73-.32-3.92-.9L3 21l.9-5.08A8.96 8.96 0 0 1 3 12z"/>
+  </svg>
+  <span>Help improve this site</span>
+</button>
+
+<!-- Modal -->
+<div id="fw-modal" class="fw-modal" hidden aria-hidden="true" role="dialog" aria-labelledby="fw-title">
+  <div class="fw-backdrop" data-close></div>
+  <div class="fw-sheet">
+    <header class="fw-header">
+      <div class="fw-progress"><div class="fw-progress-bar" id="fw-progress-bar"></div></div>
+      <div class="fw-title-row">
+        <p id="fw-title" class="fw-title">Dad — feedback wizard</p>
+        <button type="button" class="fw-close" data-close aria-label="Close">×</button>
+      </div>
+    </header>
+
+    <main class="fw-log" id="fw-log"></main>
+
+    <footer class="fw-footer">
+      <div id="fw-input-area"></div>
+      <div class="fw-actions">
+        <button type="button" id="fw-back" class="fw-btn fw-btn-ghost">Back</button>
+        <button type="button" id="fw-skip" class="fw-btn fw-btn-ghost">Skip</button>
+        <button type="button" id="fw-next" class="fw-btn fw-btn-gold">Next →</button>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<style>
+  .fw-launcher {
+    position: fixed; right: 16px; bottom: 16px; z-index: 60;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #d4a857; color: #0a0a0a;
+    border: none; border-radius: 999px;
+    padding: 12px 18px;
+    font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 0.02em;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(212,168,87,0.5);
+    cursor: pointer;
+    transition: transform 0.15s, background 0.15s;
+  }
+  .fw-launcher:hover { background: #e6b966; transform: translateY(-2px); }
+  .fw-launcher.hidden { display: none; }
+  @media (max-width: 640px) {
+    .fw-launcher { right: 12px; bottom: 12px; padding: 12px 16px; font-size: 0.8rem; }
+    .fw-launcher span { display: none; }
+    .fw-launcher { padding: 14px; width: 52px; height: 52px; justify-content: center; }
+  }
+
+  .fw-modal {
+    position: fixed; inset: 0; z-index: 70;
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+  .fw-modal[hidden] { display: none; }
+  .fw-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+  }
+  .fw-sheet {
+    position: relative;
+    width: 100%; max-width: 640px;
+    height: 100vh; max-height: 100vh;
+    background: #0a0a0a;
+    display: flex; flex-direction: column;
+    border-top: 1px solid #2a2a2a;
+  }
+  @media (min-width: 768px) {
+    .fw-modal { align-items: center; padding: 24px; }
+    .fw-sheet { height: 85vh; max-height: 720px; border: 1px solid #2a2a2a; border-radius: 10px; overflow: hidden; }
+  }
+
+  .fw-header {
+    border-bottom: 1px solid #2a2a2a;
+    background: #0a0a0a;
+  }
+  .fw-progress { height: 3px; background: #2a2a2a; }
+  .fw-progress-bar { height: 100%; background: #d4a857; width: 0%; transition: width 0.3s; }
+  .fw-title-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px;
+  }
+  .fw-title {
+    margin: 0; font-family: 'Inter', sans-serif;
+    font-size: 0.7rem; font-weight: 600; color: #8a8a8a;
+    text-transform: uppercase; letter-spacing: 0.22em;
+  }
+  .fw-close {
+    background: none; border: none; color: #f5efe1;
+    width: 36px; height: 36px; font-size: 1.6rem; line-height: 1;
+    cursor: pointer; border-radius: 4px;
+  }
+  .fw-close:hover { background: #1c1c1c; color: #d4a857; }
+
+  .fw-log {
+    flex: 1; overflow-y: auto;
+    padding: 24px 18px 12px;
+    display: flex; flex-direction: column; gap: 14px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .fw-msg {
+    max-width: 88%;
+    padding: 14px 16px;
+    border-radius: 14px;
+    font-family: 'Inter', sans-serif; font-size: 0.96rem;
+    line-height: 1.55;
+    animation: fw-in 0.25s ease-out;
+  }
+  @keyframes fw-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .fw-msg.dad {
+    align-self: flex-start;
+    background: #141414; border: 1px solid #2a2a2a;
+    color: #f5efe1;
+    border-bottom-left-radius: 4px;
+  }
+  .fw-msg.dad .who {
+    display: block; font-size: 0.65rem; color: #d4a857;
+    text-transform: uppercase; letter-spacing: 0.2em;
+    margin-bottom: 6px;
+  }
+  .fw-msg.you {
+    align-self: flex-end;
+    background: #d4a857; color: #0a0a0a;
+    border-bottom-right-radius: 4px;
+    white-space: pre-wrap;
+  }
+  .fw-msg.you.skip {
+    background: transparent; color: #8a8a8a;
+    border: 1px dashed #2a2a2a; font-style: italic;
+  }
+  .fw-msg.you .files {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;
+  }
+  .fw-msg.you .files span {
+    background: rgba(0,0,0,0.15); color: #0a0a0a; padding: 4px 10px;
+    border-radius: 6px; font-size: 0.8rem;
+  }
+
+  .fw-footer {
+    border-top: 1px solid #2a2a2a;
+    padding: 14px 18px 18px;
+    background: #0a0a0a;
+    padding-bottom: max(18px, env(safe-area-inset-bottom));
+  }
+  #fw-input-area textarea,
+  #fw-input-area input[type="text"],
+  #fw-input-area input[type="email"] {
+    width: 100%;
+    background: #141414; color: #f5efe1;
+    border: 1px solid #2a2a2a; border-radius: 8px;
+    padding: 14px;
+    font-family: 'Inter', sans-serif; font-size: 16px; /* prevent iOS zoom */
+    resize: none;
+    -webkit-appearance: none;
+  }
+  #fw-input-area textarea { min-height: 100px; }
+  #fw-input-area textarea:focus,
+  #fw-input-area input:focus { border-color: #d4a857; outline: none; }
+  #fw-input-area .filepick {
+    display: block; cursor: pointer;
+    border: 1px dashed #2a2a2a; border-radius: 8px;
+    padding: 22px 16px; text-align: center;
+    color: #f5efe1; font-size: 0.96rem;
+    background: #141414;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  #fw-input-area .filepick:hover { border-color: #d4a857; background: #1c1c1c; }
+  #fw-input-area .filepick small {
+    display: block; color: #8a8a8a; font-size: 0.78rem; margin-top: 6px;
+    letter-spacing: 0.02em;
+  }
+  #fw-input-area .picked {
+    margin-top: 10px; display: flex; flex-direction: column; gap: 6px;
+  }
+  #fw-input-area .picked .row {
+    display: flex; justify-content: space-between; align-items: center;
+    background: #141414; border: 1px solid #2a2a2a;
+    padding: 8px 12px; border-radius: 6px; font-size: 0.85rem;
+  }
+  #fw-input-area .picked .row button {
+    background: none; border: none; color: #8a8a8a; cursor: pointer;
+    font-size: 1.1rem; padding: 0 4px;
+  }
+  #fw-input-area .picked .row button:hover { color: #d4a857; }
+  #fw-input-area input[type="file"] { display: none; }
+
+  .fw-actions { display: flex; gap: 8px; margin-top: 12px; }
+  .fw-btn {
+    flex: 1;
+    border-radius: 8px; border: 1px solid;
+    padding: 14px 12px; min-height: 50px;
+    font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 600;
+    letter-spacing: 0.02em; cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .fw-btn-gold { background: #d4a857; border-color: #d4a857; color: #0a0a0a; }
+  .fw-btn-gold:hover { background: #e6b966; }
+  .fw-btn-gold:disabled { background: #2a2a2a; border-color: #2a2a2a; color: #555; cursor: not-allowed; }
+  .fw-btn-ghost { background: transparent; border-color: #2a2a2a; color: #f5efe1; }
+  .fw-btn-ghost:hover { border-color: #d4a857; color: #d4a857; }
+  .fw-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .fw-success {
+    text-align: center; padding: 40px 24px;
+  }
+  .fw-success svg { color: #d4a857; margin: 0 auto 16px; }
+  .fw-success h3 { font-family: 'Fraunces', serif; font-size: 2rem; color: #f5efe1; margin: 0 0 8px; }
+  .fw-success p { color: #8a8a8a; font-size: 1rem; margin: 0 0 18px; }
+
+  body.fw-open { overflow: hidden; }
+</style>
+
+<script is:inline define:vars={{ WEB3FORMS_KEY }}>
+(function() {
+  const STEPS = [
+    {
+      id: 'intro', type: 'intro',
+      message: "Hey Grant — Dad here. I built you a website. Spend 5-10 minutes helping me make it right. Skip anything you don't want to answer. Your phone is fine — you can upload photos as you go.",
+      cta: 'Start'
+    },
+    {
+      id: 'errors', type: 'textarea',
+      message: "First — any factual errors? Wrong years, wrong teacher names, anything I got mixed up?",
+      placeholder: "e.g. 'Eric Larson is Houston Symphony, not Houston Grand Opera' — or anything that made you wince."
+    },
+    {
+      id: 'lansing_gigs', type: 'textarea',
+      message: "Paid gigs you've played in or around Lansing? Venue, rough date, what you played. Approximate is fine.",
+      placeholder: "e.g. 'Wedding at Eagle Eye Golf Club, Sept 2025, jazz duo set with pianist Mark'."
+    },
+    {
+      id: 'ann_arbor_gigs', type: 'textarea',
+      message: "Paid gigs in or around Ann Arbor?",
+      placeholder: "e.g. 'Pit bass for U-M Musical Theatre production of Sweeney Todd, spring 2024'."
+    },
+    {
+      id: 'other_gigs', type: 'textarea',
+      message: "Other paid gigs anywhere — churches, weddings, jazz dates, recording sessions, anything we should list?",
+      placeholder: "Venue, city, what you played. List as many as you can remember."
+    },
+    {
+      id: 'photos', type: 'files',
+      message: "Got photos of you playing? Pick any from your phone — they'll auto-compress.",
+      accept: 'image/*', multiple: true, capture: 'environment',
+      hint: 'Pick from photos or take a new one'
+    },
+    {
+      id: 'programs', type: 'files',
+      message: "Concert or recital programs? Photo or PDF, whatever you've got.",
+      accept: 'image/*,application/pdf', multiple: true,
+      hint: 'Programs, posters, recital handouts'
+    },
+    {
+      id: 'bio', type: 'textarea',
+      message: "Anything I should add to the bio? Anything I should take out?",
+      placeholder: "Your call — this is your story."
+    },
+    {
+      id: 'missing', type: 'textarea',
+      message: "Anything else missing? Services I should mention, repertoire to add, recordings to link?",
+      placeholder: "e.g. 'I do double bass + electric — should mention both'."
+    },
+    {
+      id: 'contact', type: 'text',
+      message: "Best way to reach you about updates? Phone, email — whatever you check.",
+      placeholder: "Optional"
+    },
+    {
+      id: 'submit', type: 'submit',
+      message: "That's it. Ready to send everything to Dad?"
+    }
+  ];
+
+  const state = {
+    step: 0,
+    answers: {},
+    files: {}, // {questionId: [File, File, ...]}
+    submitted: false
+  };
+
+  const $ = (id) => document.getElementById(id);
+  const log = $('fw-log');
+  const inputArea = $('fw-input-area');
+  const progressBar = $('fw-progress-bar');
+  const btnNext = $('fw-next');
+  const btnSkip = $('fw-skip');
+  const btnBack = $('fw-back');
+  const launcher = $('fw-launcher');
+  const modal = $('fw-modal');
+
+  // Show launcher once page is interactive
+  setTimeout(() => launcher.classList.remove('hidden'), 600);
+
+  function open() {
+    modal.hidden = false;
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('fw-open');
+    if (state.step === 0 && log.children.length === 0) render();
+  }
+  function close() {
+    modal.hidden = true;
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('fw-open');
+  }
+
+  launcher.addEventListener('click', open);
+  document.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', close));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) close(); });
+
+  // Auto-open via ?feedback=1
+  if (new URLSearchParams(location.search).get('feedback') === '1') {
+    setTimeout(open, 300);
+  }
+
+  function appendMsg(text, who, opts = {}) {
+    const div = document.createElement('div');
+    div.className = 'fw-msg ' + who + (opts.skip ? ' skip' : '');
+    if (who === 'dad') {
+      const w = document.createElement('span');
+      w.className = 'who';
+      w.textContent = 'Dad';
+      div.appendChild(w);
+    }
+    const t = document.createElement('span');
+    t.textContent = text;
+    div.appendChild(t);
+    if (opts.files && opts.files.length) {
+      const wrap = document.createElement('div');
+      wrap.className = 'files';
+      opts.files.forEach(f => {
+        const tag = document.createElement('span');
+        tag.textContent = '📎 ' + f.name;
+        wrap.appendChild(tag);
+      });
+      div.appendChild(wrap);
+    }
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function setProgress() {
+    const pct = Math.min(100, (state.step / (STEPS.length - 1)) * 100);
+    progressBar.style.width = pct + '%';
+  }
+
+  function currentValue() {
+    const s = STEPS[state.step];
+    if (s.type === 'textarea') return inputArea.querySelector('textarea').value.trim();
+    if (s.type === 'text') return inputArea.querySelector('input[type="text"]').value.trim();
+    if (s.type === 'files') return state.files[s.id] || [];
+    return null;
+  }
+
+  function renderInput() {
+    const s = STEPS[state.step];
+    inputArea.innerHTML = '';
+
+    if (s.type === 'intro' || s.type === 'submit') {
+      btnNext.textContent = s.cta || (s.type === 'submit' ? 'Send to Dad' : 'Next →');
+      btnSkip.style.display = 'none';
+      btnBack.style.display = state.step === 0 ? 'none' : 'inline-flex';
+      btnNext.disabled = false;
+      return;
+    }
+    btnSkip.style.display = 'inline-flex';
+    btnBack.style.display = 'inline-flex';
+    btnNext.textContent = 'Next →';
+
+    if (s.type === 'textarea') {
+      const ta = document.createElement('textarea');
+      ta.placeholder = s.placeholder || '';
+      ta.value = state.answers[s.id] || '';
+      ta.oninput = () => btnNext.disabled = !ta.value.trim();
+      inputArea.appendChild(ta);
+      btnNext.disabled = !ta.value.trim();
+      setTimeout(() => ta.focus(), 100);
+    } else if (s.type === 'text') {
+      const ip = document.createElement('input');
+      ip.type = 'text';
+      ip.placeholder = s.placeholder || '';
+      ip.value = state.answers[s.id] || '';
+      ip.oninput = () => btnNext.disabled = !ip.value.trim();
+      inputArea.appendChild(ip);
+      btnNext.disabled = !ip.value.trim();
+      setTimeout(() => ip.focus(), 100);
+    } else if (s.type === 'files') {
+      const label = document.createElement('label');
+      label.className = 'filepick';
+      label.innerHTML = '+ Add files <small>' + (s.hint || '') + '</small>';
+      const ip = document.createElement('input');
+      ip.type = 'file';
+      ip.accept = s.accept;
+      if (s.multiple) ip.multiple = true;
+      if (s.capture) ip.capture = s.capture;
+      label.appendChild(ip);
+      inputArea.appendChild(label);
+
+      const picked = document.createElement('div');
+      picked.className = 'picked';
+      inputArea.appendChild(picked);
+
+      function refresh() {
+        picked.innerHTML = '';
+        (state.files[s.id] || []).forEach((f, i) => {
+          const row = document.createElement('div');
+          row.className = 'row';
+          row.innerHTML = '<span>📎 ' + f.name + ' <small style="color:#8a8a8a">(' + Math.round(f.size/1024) + ' KB)</small></span>';
+          const x = document.createElement('button');
+          x.type = 'button';
+          x.textContent = '×';
+          x.onclick = () => {
+            state.files[s.id].splice(i, 1);
+            refresh();
+            btnNext.disabled = !(state.files[s.id] || []).length;
+          };
+          row.appendChild(x);
+          picked.appendChild(row);
+        });
+        btnNext.disabled = !(state.files[s.id] || []).length;
+      }
+      refresh();
+
+      ip.onchange = async () => {
+        state.files[s.id] = state.files[s.id] || [];
+        for (const file of ip.files) {
+          if (file.type.startsWith('image/')) {
+            const compressed = await compressImage(file);
+            state.files[s.id].push(compressed);
+          } else {
+            state.files[s.id].push(file);
+          }
+        }
+        ip.value = '';
+        refresh();
+      };
+    }
+  }
+
+  async function compressImage(file) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      const reader = new FileReader();
+      reader.onload = (e) => { img.src = e.target.result; };
+      img.onload = () => {
+        const max = 1600;
+        let w = img.width, h = img.height;
+        if (w > h && w > max) { h = h * (max / w); w = max; }
+        else if (h > max) { w = w * (max / h); h = max; }
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        c.toBlob((blob) => {
+          const newName = file.name.replace(/\.[^/.]+$/, '') + '.jpg';
+          resolve(new File([blob], newName, { type: 'image/jpeg' }));
+        }, 'image/jpeg', 0.82);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function render() {
+    const s = STEPS[state.step];
+    setProgress();
+    // Only push the dad message if we haven't already shown it
+    const lastMsg = log.querySelector('.fw-msg.dad:last-of-type span:last-child');
+    if (!lastMsg || lastMsg.textContent !== s.message) {
+      appendMsg(s.message, 'dad');
+    }
+    renderInput();
+  }
+
+  function advance(skipped = false) {
+    const s = STEPS[state.step];
+    if (s.type === 'intro') {
+      state.step++;
+      render();
+      return;
+    }
+    if (s.type === 'submit') {
+      submit();
+      return;
+    }
+    if (skipped) {
+      appendMsg('(skipped)', 'you', { skip: true });
+    } else if (s.type === 'files') {
+      const arr = state.files[s.id] || [];
+      if (arr.length) appendMsg(arr.length + ' file' + (arr.length > 1 ? 's' : '') + ' attached', 'you', { files: arr });
+      else { appendMsg('(skipped)', 'you', { skip: true }); }
+    } else {
+      const v = currentValue();
+      state.answers[s.id] = v;
+      appendMsg(v, 'you');
+    }
+    state.step++;
+    if (state.step >= STEPS.length) state.step = STEPS.length - 1;
+    render();
+  }
+
+  function goBack() {
+    if (state.step === 0) return;
+    // Remove last two messages from log (your answer + next dad question if shown)
+    const msgs = log.querySelectorAll('.fw-msg');
+    // Remove until we drop the previous "you" answer too
+    if (msgs.length >= 1 && msgs[msgs.length - 1].classList.contains('dad')) {
+      msgs[msgs.length - 1].remove();
+    }
+    const remaining = log.querySelectorAll('.fw-msg');
+    if (remaining.length >= 1 && remaining[remaining.length - 1].classList.contains('you')) {
+      remaining[remaining.length - 1].remove();
+    }
+    state.step--;
+    render();
+  }
+
+  async function submit() {
+    if (state.submitted) return;
+    state.submitted = true;
+    btnNext.disabled = true;
+    btnSkip.disabled = true;
+    btnBack.disabled = true;
+    inputArea.innerHTML = '<p style="color:#8a8a8a;text-align:center;padding:20px;">Sending to Dad…</p>';
+
+    const fd = new FormData();
+    fd.append('access_key', WEB3FORMS_KEY);
+    fd.append('subject', '🎻 Grant feedback — ' + new Date().toLocaleString());
+    fd.append('from_name', 'Grant (feedback wizard)');
+
+    // Build a readable email body
+    const lines = ['Grant submitted the feedback wizard.', '', '─────────────', ''];
+    STEPS.forEach(s => {
+      if (s.type === 'intro' || s.type === 'submit') return;
+      const ans = state.answers[s.id];
+      const fs = state.files[s.id] || [];
+      lines.push('Q: ' + s.message);
+      if (s.type === 'files') {
+        lines.push('A: ' + (fs.length ? fs.length + ' file(s) attached' : '(skipped)'));
+      } else {
+        lines.push('A: ' + (ans || '(skipped)'));
+      }
+      lines.push('');
+    });
+    fd.append('message', lines.join('\n'));
+
+    // Attach files (max 5 by Web3Forms)
+    let attachIdx = 0;
+    Object.entries(state.files).forEach(([qid, arr]) => {
+      arr.forEach((f) => {
+        if (attachIdx < 5) {
+          fd.append('attachment[' + attachIdx + ']', f, qid + '-' + f.name);
+          attachIdx++;
+        }
+      });
+    });
+
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd });
+      const j = await res.json();
+      if (j.success) showSuccess();
+      else showError(j.message || 'Submission failed');
+    } catch (e) {
+      showError(e.message || 'Network error');
+    }
+  }
+
+  function showSuccess() {
+    inputArea.innerHTML = `
+      <div class="fw-success">
+        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+        </svg>
+        <h3>Sent.</h3>
+        <p>Dad will update the site in the next day or two. Thanks Grant.</p>
+      </div>`;
+    btnNext.style.display = 'none';
+    btnSkip.style.display = 'none';
+    btnBack.textContent = 'Close';
+    btnBack.disabled = false;
+    btnBack.onclick = close;
+  }
+
+  function showError(msg) {
+    inputArea.innerHTML = `
+      <div class="fw-success">
+        <h3 style="color:#ff8a8a">Couldn't send.</h3>
+        <p>${msg}</p>
+        <p style="font-size:0.85rem;margin-top:14px;">Text Dad directly — he'll grab it.</p>
+      </div>`;
+    btnNext.disabled = false;
+    btnNext.textContent = 'Try again';
+    btnNext.onclick = () => { state.submitted = false; submit(); };
+  }
+
+  btnNext.addEventListener('click', () => advance(false));
+  btnSkip.addEventListener('click', () => advance(true));
+  btnBack.addEventListener('click', goBack);
+})();
+</script>
