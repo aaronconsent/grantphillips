@@ -18,7 +18,7 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
     <header class="fw-header">
       <div class="fw-progress"><div class="fw-progress-bar" id="fw-progress-bar"></div></div>
       <div class="fw-title-row">
-        <p id="fw-title" class="fw-title">Dad — feedback wizard</p>
+        <p id="fw-title" class="fw-title">From Dad · A few questions</p>
         <button type="button" class="fw-close" data-close aria-label="Close">×</button>
       </div>
     </header>
@@ -121,7 +121,9 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
     background: #141414; border: 1px solid #2a2a2a;
     color: #f5efe1;
     border-bottom-left-radius: 4px;
+    white-space: pre-wrap;
   }
+  .fw-msg.dad > span:last-child { display: block; }
   .fw-msg.dad .who {
     display: block; font-size: 0.65rem; color: #d4a857;
     text-transform: uppercase; letter-spacing: 0.2em;
@@ -224,59 +226,59 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
   const STEPS = [
     {
       id: 'intro', type: 'intro',
-      message: "Hey Grant — Dad here. I built you a website. Spend 5-10 minutes helping me make it right. Skip anything you don't want to answer. Your phone is fine — you can upload photos as you go.",
-      cta: 'Start'
+      message: "Hey Grant — Dad here.\n\nI built you a website to help you book more gigs. Take 5 to 10 minutes and help me get it right.\n\nSkip anything you don't want to answer. Your phone is fine — you can upload photos as you go.",
+      cta: 'Let’s go'
     },
     {
       id: 'errors', type: 'textarea',
-      message: "First — any factual errors? Wrong years, wrong teacher names, anything I got mixed up?",
-      placeholder: "e.g. 'Eric Larson is Houston Symphony, not Houston Grand Opera' — or anything that made you wince."
+      message: "First — any factual errors?\n\nWrong years, misspelled names, teachers I got mixed up, anything that made you wince?",
+      placeholder: "e.g., “Eric Larson is Houston Symphony, not Houston Grand Opera.” Whatever stood out."
     },
     {
       id: 'lansing_gigs', type: 'textarea',
-      message: "Paid gigs you've played in or around Lansing? Venue, rough date, what you played. Approximate is fine.",
-      placeholder: "e.g. 'Wedding at Eagle Eye Golf Club, Sept 2025, jazz duo set with pianist Mark'."
+      message: "Paid gigs you’ve played in or around Lansing?\n\nVenue, rough date, what you played. Approximate is fine.",
+      placeholder: "e.g., “Wedding at Eagle Eye Golf Club, September 2025 — jazz duo with pianist Mark.”"
     },
     {
       id: 'ann_arbor_gigs', type: 'textarea',
-      message: "Paid gigs in or around Ann Arbor?",
-      placeholder: "e.g. 'Pit bass for U-M Musical Theatre production of Sweeney Todd, spring 2024'."
+      message: "Paid gigs in or around Ann Arbor?\n\nSame format — venue, date, what you played.",
+      placeholder: "e.g., “Pit bass for U‑M Musical Theatre, Sweeney Todd, spring 2024.”"
     },
     {
       id: 'other_gigs', type: 'textarea',
-      message: "Other paid gigs anywhere — churches, weddings, jazz dates, recording sessions, anything we should list?",
+      message: "Other paid gigs anywhere else?\n\nChurches, weddings, jazz dates, recording sessions — anything I should list.",
       placeholder: "Venue, city, what you played. List as many as you can remember."
     },
     {
       id: 'photos', type: 'files',
-      message: "Got photos of you playing? Pick any from your phone — they'll auto-compress.",
+      message: "Got photos of you playing?\n\nPick any from your phone — they’ll compress automatically before sending.",
       accept: 'image/*', multiple: true, capture: 'environment',
-      hint: 'Pick from photos or take a new one'
+      hint: 'Pick from your photos or take a new one'
     },
     {
       id: 'programs', type: 'files',
-      message: "Concert or recital programs? Photo or PDF, whatever you've got.",
+      message: "Concert or recital programs?\n\nA photo of the cover is great. PDFs work too.",
       accept: 'image/*,application/pdf', multiple: true,
       hint: 'Programs, posters, recital handouts'
     },
     {
       id: 'bio', type: 'textarea',
-      message: "Anything I should add to the bio? Anything I should take out?",
-      placeholder: "Your call — this is your story."
+      message: "Anything I should add to the bio?\n\nAnything I should take out? Your call — this is your story.",
+      placeholder: "Tell me what would make it feel more like you."
     },
     {
       id: 'missing', type: 'textarea',
-      message: "Anything else missing? Services I should mention, repertoire to add, recordings to link?",
-      placeholder: "e.g. 'I do double bass + electric — should mention both'."
+      message: "Anything else missing?\n\nServices to mention, repertoire to add, recordings to link, ensembles you play with.",
+      placeholder: "e.g., “I also play electric bass — should mention both.”"
     },
     {
       id: 'contact', type: 'text',
-      message: "Best way to reach you about updates? Phone, email — whatever you check.",
-      placeholder: "Optional"
+      message: "Best way to reach you about updates?\n\nPhone, email — whatever you actually check. (Optional.)",
+      placeholder: "Phone number or email"
     },
     {
       id: 'submit', type: 'submit',
-      message: "That's it. Ready to send everything to Dad?"
+      message: "That’s everything.\n\nReady to send it to Dad?"
     }
   ];
 
