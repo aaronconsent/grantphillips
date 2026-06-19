@@ -326,21 +326,36 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
     animation: fw-pop 0.25s ease-out;
   }
   .fw-chip {
-    background: transparent;
-    color: #d4a857;
-    border: 1px solid #3a3a3a;
+    background: rgba(212,168,87,0.18);
+    color: #f5deab;
+    border: 1.5px solid #d4a857;
     border-radius: 999px;
-    padding: 7px 14px;
+    padding: 9px 18px;
     font-family: inherit;
-    font-size: 0.82rem; font-weight: 500;
+    font-size: 0.88rem; font-weight: 600;
     cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
+    transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+    box-shadow: 0 2px 8px rgba(212,168,87,0.12);
   }
-  .fw-chip:hover { background: rgba(212,168,87,0.1); border-color: #d4a857; }
+  .fw-chip:hover {
+    background: rgba(212,168,87,0.32);
+    color: #fff5d6;
+    border-color: #e6b966;
+    transform: translateY(-1px);
+  }
+  .fw-chip:active { transform: translateY(0); }
   .fw-chip.primary {
-    background: #d4a857; color: #0a0a0a; border-color: #d4a857; font-weight: 600;
+    background: #d4a857;
+    color: #0a0a0a;
+    border-color: #d4a857;
+    font-weight: 700;
+    box-shadow: 0 4px 14px rgba(212,168,87,0.35);
   }
-  .fw-chip.primary:hover { background: #e6b966; }
+  .fw-chip.primary:hover {
+    background: #e6b966;
+    border-color: #e6b966;
+    color: #0a0a0a;
+  }
 
   .fw-saved {
     align-self: center;
