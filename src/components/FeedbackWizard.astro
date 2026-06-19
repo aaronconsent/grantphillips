@@ -1,48 +1,57 @@
 ---
-// FeedbackWizard — chat-style review wizard for Grant.
+// FeedbackWizard — chat-bubble interface for Grant's review.
 // Submits to Web3Forms; Aaron sets WEB3FORMS_ACCESS_KEY (see README).
 const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
 ---
 <!-- Floating launcher -->
-<button id="fw-launcher" type="button" aria-label="Open feedback chat" class="fw-launcher hidden">
-  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+<button id="fw-launcher" type="button" aria-label="Open chat with Dad" class="fw-launcher hidden">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+    <path d="M4 4h16c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2H7l-3 3V6c0-1.1.9-2 2-2z"/>
   </svg>
-  <span class="fw-launcher-label">Help improve this site</span>
+  <span class="fw-launcher-label">Chat with Dad</span>
   <span class="fw-launcher-dot" aria-hidden="true"></span>
 </button>
 
-<!-- Modal -->
+<!-- Chat modal -->
 <div id="fw-modal" class="fw-modal" hidden aria-hidden="true" role="dialog" aria-labelledby="fw-title">
   <div class="fw-backdrop" data-close></div>
-  <div class="fw-sheet" role="document">
+  <section class="fw-sheet" role="document">
+
+    <!-- Header (avatar + name + presence + close) -->
     <header class="fw-header">
-      <div class="fw-progress" aria-hidden="true"><div class="fw-progress-bar" id="fw-progress-bar"></div></div>
-      <div class="fw-title-row">
-        <div>
-          <p id="fw-title" class="fw-title">From Dad</p>
-          <p id="fw-subtitle" class="fw-subtitle">A quick chat</p>
-        </div>
-        <div class="fw-header-right">
-          <span id="fw-saved" class="fw-saved" aria-live="polite">Saved</span>
-          <button type="button" class="fw-close" data-close aria-label="Close">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
+      <div class="fw-presence">
+        <div class="fw-avatar" aria-hidden="true">D</div>
+        <div class="fw-presence-text">
+          <p id="fw-title" class="fw-title">Dad</p>
+          <p id="fw-subtitle" class="fw-subtitle"><span class="fw-online-dot"></span>Online</p>
         </div>
       </div>
+      <button type="button" class="fw-close" data-close aria-label="Close chat">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </header>
 
+    <!-- Conversation -->
     <main class="fw-log" id="fw-log" aria-live="polite"></main>
 
-    <footer class="fw-footer">
-      <div id="fw-input-area" class="fw-input-area"></div>
-      <div class="fw-actions">
-        <button type="button" id="fw-back" class="fw-btn fw-btn-ghost">Back</button>
-        <button type="button" id="fw-skip" class="fw-btn fw-btn-ghost">Skip</button>
-        <button type="button" id="fw-next" class="fw-btn fw-btn-gold">Send →</button>
+    <!-- Composer (paperclip + auto-grow input + send) -->
+    <footer class="fw-composer" id="fw-composer">
+      <div class="fw-attachments" id="fw-attachments"></div>
+      <div class="fw-composer-row">
+        <button type="button" class="fw-paperclip" id="fw-paperclip" aria-label="Attach files" hidden>
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        </button>
+        <input type="file" id="fw-fileinput" hidden>
+        <textarea id="fw-input" class="fw-input" rows="1" placeholder="Type a message…" aria-label="Message"></textarea>
+        <button type="button" class="fw-send" id="fw-send" aria-label="Send" disabled>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+          </svg>
+        </button>
       </div>
     </footer>
-  </div>
+
+  </section>
 </div>
 
 <style>
@@ -52,23 +61,21 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
     display: inline-flex; align-items: center; gap: 10px;
     background: #d4a857; color: #0a0a0a;
     border: none; border-radius: 999px;
-    padding: 14px 20px;
+    padding: 13px 20px;
     font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 600;
-    letter-spacing: 0.01em;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.45), 0 0 0 1px rgba(212,168,87,0.5);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.45), 0 0 0 1px rgba(212,168,87,0.45);
     cursor: pointer;
     transition: transform 0.18s, background 0.18s, box-shadow 0.18s;
   }
-  .fw-launcher:hover { background: #e6b966; transform: translateY(-2px); box-shadow: 0 14px 36px rgba(0,0,0,0.55), 0 0 0 1px rgba(212,168,87,0.7); }
+  .fw-launcher:hover { background: #e6b966; transform: translateY(-2px); }
   .fw-launcher.hidden { display: none; }
   .fw-launcher-dot {
     display: none;
-    width: 8px; height: 8px; border-radius: 50%;
+    width: 9px; height: 9px; border-radius: 50%;
     background: #0a0a0a;
   }
   .fw-launcher.resume .fw-launcher-dot { display: block; }
-  @media (max-width: 640px) {
-    .fw-launcher { right: 12px; bottom: 12px; padding: 13px 16px; }
+  @media (max-width: 480px) {
     .fw-launcher-label { font-size: 0.82rem; }
   }
 
@@ -80,56 +87,61 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
   .fw-modal[hidden] { display: none; }
   .fw-backdrop {
     position: absolute; inset: 0;
-    background: rgba(0,0,0,0.78); backdrop-filter: blur(6px);
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
     animation: fw-fade 0.2s ease-out;
   }
   @keyframes fw-fade { from { opacity: 0; } to { opacity: 1; } }
   .fw-sheet {
     position: relative;
-    width: 100%; max-width: 680px;
+    width: 100%; max-width: 540px;
     height: 100dvh; max-height: 100dvh;
-    background: #0a0a0a;
+    background: #0d0d0d;
     display: flex; flex-direction: column;
-    border-top: 1px solid #2a2a2a;
-    animation: fw-rise 0.25s ease-out;
+    animation: fw-rise 0.22s ease-out;
   }
-  @keyframes fw-rise { from { transform: translateY(20px); opacity: 0.5; } to { transform: none; opacity: 1; } }
-  @media (min-width: 768px) {
+  @keyframes fw-rise { from { transform: translateY(20px); opacity: 0.6; } to { transform: none; opacity: 1; } }
+  @media (min-width: 640px) {
     .fw-modal { align-items: center; padding: 24px; }
-    .fw-sheet { height: 88dvh; max-height: 760px; border: 1px solid #2a2a2a; border-radius: 14px; overflow: hidden; }
+    .fw-sheet { height: 88dvh; max-height: 760px; border: 1px solid #2a2a2a; border-radius: 16px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.6); }
   }
 
   /* ───── Header ───── */
-  .fw-header { border-bottom: 1px solid #2a2a2a; background: #0a0a0a; flex-shrink: 0; }
-  .fw-progress { height: 3px; background: #1c1c1c; }
-  .fw-progress-bar { height: 100%; background: linear-gradient(90deg, #b88c3a, #d4a857); width: 0%; transition: width 0.4s ease-out; }
-  .fw-title-row {
+  .fw-header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 18px;
+    padding: 12px 14px;
+    background: #131313;
+    border-bottom: 1px solid #232323;
+    flex-shrink: 0;
   }
+  .fw-presence { display: flex; align-items: center; gap: 12px; }
+  .fw-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, #d4a857, #b88c3a);
+    color: #0a0a0a;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 600;
+    box-shadow: 0 2px 8px rgba(212,168,87,0.25);
+  }
+  .fw-presence-text { line-height: 1.2; }
   .fw-title {
     margin: 0; font-family: 'Inter', sans-serif;
-    font-size: 0.95rem; font-weight: 600; color: #f5efe1;
-    letter-spacing: 0.01em;
+    font-size: 0.98rem; font-weight: 600; color: #f5efe1;
   }
   .fw-subtitle {
-    margin: 1px 0 0; font-family: 'Inter', sans-serif;
-    font-size: 0.72rem; font-weight: 500; color: #8a8a8a;
-    letter-spacing: 0.02em;
+    margin: 2px 0 0; font-family: 'Inter', sans-serif;
+    font-size: 0.74rem; color: #8a8a8a;
+    display: inline-flex; align-items: center; gap: 6px;
   }
-  .fw-header-right { display: flex; align-items: center; gap: 10px; }
-  .fw-saved {
-    font-size: 0.7rem; color: #8a8a8a;
-    letter-spacing: 0.04em;
-    opacity: 0; transition: opacity 0.25s;
+  .fw-online-dot {
+    display: inline-block; width: 7px; height: 7px;
+    border-radius: 50%; background: #4ade80;
+    box-shadow: 0 0 0 2px rgba(74,222,128,0.2);
   }
-  .fw-saved.show { opacity: 1; color: #d4a857; }
-  .fw-saved::before { content: '✓ '; }
   .fw-close {
     background: none; border: none; color: #8a8a8a;
     width: 38px; height: 38px;
     display: inline-flex; align-items: center; justify-content: center;
-    cursor: pointer; border-radius: 8px;
+    cursor: pointer; border-radius: 50%;
   }
   .fw-close:hover { background: #1c1c1c; color: #f5efe1; }
 
@@ -137,166 +149,238 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
   .fw-log {
     flex: 1; min-height: 0;
     overflow-y: auto;
-    padding: 24px 20px 12px;
-    display: flex; flex-direction: column; gap: 18px;
+    padding: 20px 16px 8px;
+    display: flex; flex-direction: column; gap: 10px;
     -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-  }
-  /* Pull subsequent dad bubbles in same turn closer together */
-  .fw-turn + .fw-turn { margin-top: 0; }
-  .fw-turn {
-    display: flex; flex-direction: column; gap: 6px;
-    max-width: 100%;
-  }
-  .fw-turn.you { align-items: flex-end; }
-  .fw-turn.dad { align-items: flex-start; }
-
-  .fw-who {
-    font-size: 0.62rem; color: #d4a857;
-    text-transform: uppercase; letter-spacing: 0.22em;
-    font-weight: 600;
-    padding: 0 4px;
-    margin-bottom: 2px;
+    background:
+      radial-gradient(ellipse 100% 60% at 50% 0%, rgba(212,168,87,0.03), transparent 70%),
+      #0d0d0d;
   }
 
-  .fw-msg {
-    max-width: 86%;
-    padding: 13px 17px;
-    border-radius: 18px;
+  .fw-row { display: flex; max-width: 100%; }
+  .fw-row.dad { justify-content: flex-start; }
+  .fw-row.you { justify-content: flex-end; }
+  .fw-row + .fw-row { margin-top: 0; }
+  .fw-row.dad + .fw-row.dad { margin-top: -6px; }  /* same-side bubbles cluster */
+  .fw-row.you + .fw-row.you { margin-top: -6px; }
+  .fw-row.dad + .fw-row.you, .fw-row.you + .fw-row.dad { margin-top: 8px; }
+
+  .fw-bubble {
+    max-width: 80%;
+    padding: 11px 15px;
     font-family: 'Inter', sans-serif;
     font-size: 0.98rem;
-    line-height: 1.55;
+    line-height: 1.5;
     white-space: pre-wrap;
     word-wrap: break-word;
-    animation: fw-in 0.28s cubic-bezier(0.2, 0.9, 0.3, 1);
+    animation: fw-pop 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
   }
-  @keyframes fw-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @keyframes fw-pop { from { opacity: 0; transform: translateY(4px) scale(0.98); } to { opacity: 1; transform: none; } }
 
-  .fw-msg.dad {
-    background: #161616; border: 1px solid #232323;
+  .fw-bubble.dad {
+    background: #1d1d1f;
     color: #ece5d2;
-    border-bottom-left-radius: 6px;
+    border-radius: 18px 18px 18px 6px;
   }
-  .fw-msg.dad + .fw-msg.dad { border-top-left-radius: 6px; }
-  .fw-msg.you {
-    background: #d4a857; color: #0a0a0a;
-    border-bottom-right-radius: 6px;
+  .fw-bubble.dad + .fw-bubble.dad,
+  .fw-row.dad + .fw-row.dad .fw-bubble.dad {
+    border-top-left-radius: 6px;
+  }
+  .fw-bubble.you {
+    background: #d4a857;
+    color: #0a0a0a;
+    border-radius: 18px 18px 6px 18px;
     font-weight: 500;
   }
-  .fw-msg.you.skip {
-    background: transparent; color: #8a8a8a;
-    border: 1px dashed #2a2a2a; font-style: italic; font-weight: 400;
+  .fw-bubble.you.skip {
+    background: transparent;
+    color: #6a6a6a;
+    border: 1px dashed #2a2a2a;
+    font-style: italic;
+    font-weight: 400;
+    padding: 8px 14px;
   }
 
-  /* Image previews in user bubbles */
+  /* Image thumbs inside your bubble */
   .fw-files {
-    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 8px;
   }
-  .fw-file-thumb {
-    width: 72px; height: 72px; border-radius: 8px;
-    object-fit: cover; background: rgba(0,0,0,0.15);
+  .fw-files img {
+    width: 64px; height: 64px; border-radius: 8px;
+    object-fit: cover;
     border: 1px solid rgba(0,0,0,0.15);
   }
-  .fw-file-doc {
+  .fw-files .doc {
     display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(0,0,0,0.15); padding: 6px 12px;
-    border-radius: 6px; font-size: 0.82rem;
+    background: rgba(0,0,0,0.15);
+    padding: 6px 10px; border-radius: 6px;
+    font-size: 0.8rem;
   }
 
-  /* Typing indicator */
+  /* Typing indicator (dad) */
   .fw-typing {
-    display: inline-flex; gap: 5px; align-items: center;
-    padding: 14px 18px;
-    background: #161616; border: 1px solid #232323;
-    border-radius: 18px; border-bottom-left-radius: 6px;
     align-self: flex-start;
+    background: #1d1d1f;
+    border-radius: 18px 18px 18px 6px;
+    padding: 12px 16px;
+    display: inline-flex; gap: 5px;
+    animation: fw-pop 0.22s ease-out;
   }
   .fw-typing .dot {
     width: 7px; height: 7px; border-radius: 50%;
     background: #6a6a6a;
     animation: fw-blink 1.3s infinite ease-in-out;
   }
-  .fw-typing .dot:nth-child(2) { animation-delay: 0.2s; }
-  .fw-typing .dot:nth-child(3) { animation-delay: 0.4s; }
+  .fw-typing .dot:nth-child(2) { animation-delay: 0.18s; }
+  .fw-typing .dot:nth-child(3) { animation-delay: 0.36s; }
   @keyframes fw-blink {
-    0%, 80%, 100% { opacity: 0.3; transform: scale(0.9); }
-    40% { opacity: 1; transform: scale(1.1); }
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.85); }
+    40% { opacity: 1; transform: scale(1.05); }
   }
 
-  /* ───── Footer / input ───── */
-  .fw-footer {
-    border-top: 1px solid #2a2a2a;
-    padding: 14px 18px;
-    background: #0a0a0a;
-    padding-bottom: max(14px, env(safe-area-inset-bottom));
+  /* Quick-reply chips (after dad's message) */
+  .fw-chips {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    padding: 4px 0 4px 4px;
+    animation: fw-pop 0.25s ease-out;
+  }
+  .fw-chip {
+    background: transparent;
+    color: #d4a857;
+    border: 1px solid #3a3a3a;
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem; font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .fw-chip:hover { background: rgba(212,168,87,0.1); border-color: #d4a857; }
+  .fw-chip.primary {
+    background: #d4a857; color: #0a0a0a; border-color: #d4a857;
+    font-weight: 600;
+  }
+  .fw-chip.primary:hover { background: #e6b966; }
+
+  /* Saved indicator */
+  .fw-saved {
+    align-self: center;
+    font-size: 0.7rem; color: #5a5a5a;
+    letter-spacing: 0.05em;
+    padding: 4px 10px;
+    opacity: 0; transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .fw-saved.show { opacity: 1; }
+
+  /* ───── Composer ───── */
+  .fw-composer {
+    border-top: 1px solid #232323;
+    padding: 10px 12px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+    background: #131313;
     flex-shrink: 0;
   }
-  .fw-input-area:empty { display: none; }
-  .fw-input-area textarea,
-  .fw-input-area input[type="text"],
-  .fw-input-area input[type="email"] {
-    width: 100%;
-    background: #161616; color: #f5efe1;
-    border: 1px solid #2a2a2a; border-radius: 12px;
-    padding: 14px 16px;
-    font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.5;
+  .fw-attachments {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-bottom: 8px;
+  }
+  .fw-attachments:empty { display: none; }
+  .fw-att-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #1d1d1f; border: 1px solid #2a2a2a;
+    padding: 6px 8px 6px 10px;
+    border-radius: 999px;
+    font-size: 0.78rem; color: #ece5d2;
+  }
+  .fw-att-chip img {
+    width: 28px; height: 28px; border-radius: 50%;
+    object-fit: cover;
+  }
+  .fw-att-chip .icon {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #2a2a2a; color: #d4a857;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+  }
+  .fw-att-chip button {
+    background: none; border: none; color: #8a8a8a;
+    cursor: pointer; font-size: 1rem; padding: 0 4px; line-height: 1;
+  }
+  .fw-att-chip button:hover { color: #ff8a8a; }
+
+  .fw-composer-row {
+    display: flex; align-items: flex-end; gap: 8px;
+  }
+  .fw-paperclip, .fw-send {
+    flex-shrink: 0;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: none; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background 0.15s, color 0.15s, opacity 0.15s;
+  }
+  .fw-paperclip {
+    background: transparent;
+    color: #8a8a8a;
+  }
+  .fw-paperclip:hover { background: #1d1d1f; color: #d4a857; }
+  .fw-paperclip.glow {
+    color: #d4a857;
+    background: rgba(212,168,87,0.1);
+    animation: fw-glow 2s ease-in-out infinite;
+  }
+  @keyframes fw-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(212,168,87,0); }
+    50% { box-shadow: 0 0 0 6px rgba(212,168,87,0.12); }
+  }
+  .fw-paperclip[hidden] { display: none; }
+
+  .fw-input {
+    flex: 1;
+    background: #1d1d1f;
+    color: #f5efe1;
+    border: 1px solid #2a2a2a;
+    border-radius: 22px;
+    padding: 10px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.45;
     resize: none;
     -webkit-appearance: none;
+    max-height: 28dvh;
+    overflow-y: auto;
     transition: border-color 0.15s;
   }
-  .fw-input-area textarea { min-height: 90px; max-height: 30dvh; }
-  .fw-input-area textarea:focus,
-  .fw-input-area input:focus { border-color: #d4a857; outline: none; }
-  .fw-input-area .filepick {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    cursor: pointer;
-    border: 1px dashed #3a3a3a; border-radius: 12px;
-    padding: 22px 16px; text-align: center;
-    color: #f5efe1; font-size: 0.95rem;
-    background: #141414;
-    transition: border-color 0.15s, background 0.15s;
-  }
-  .fw-input-area .filepick:hover { border-color: #d4a857; background: #1a1a1a; }
-  .fw-input-area .filepick small {
-    display: block; color: #8a8a8a; font-size: 0.78rem; margin-top: 6px;
-  }
-  .fw-input-area .picked { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
-  .fw-input-area .picked .row {
-    display: flex; justify-content: space-between; align-items: center;
-    background: #161616; border: 1px solid #2a2a2a;
-    padding: 9px 14px; border-radius: 8px; font-size: 0.86rem; color: #f5efe1;
-  }
-  .fw-input-area .picked .row .meta { color: #8a8a8a; font-size: 0.76rem; margin-left: 8px; }
-  .fw-input-area .picked .row button {
-    background: none; border: none; color: #8a8a8a; cursor: pointer;
-    font-size: 1.2rem; padding: 0 4px; line-height: 1;
-  }
-  .fw-input-area .picked .row button:hover { color: #d4a857; }
-  .fw-input-area input[type="file"] { display: none; }
+  .fw-input:focus { border-color: #d4a857; outline: none; }
+  .fw-input::placeholder { color: #6a6a6a; }
+  .fw-input:disabled { opacity: 0.5; }
 
-  .fw-actions { display: flex; gap: 8px; margin-top: 12px; }
-  .fw-btn {
-    flex: 1; border-radius: 10px; border: 1px solid;
-    padding: 14px 12px; min-height: 50px;
-    font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 600;
-    letter-spacing: 0.01em; cursor: pointer;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  .fw-send {
+    background: #2a2a2a;
+    color: #6a6a6a;
   }
-  .fw-btn-gold { background: #d4a857; border-color: #d4a857; color: #0a0a0a; }
-  .fw-btn-gold:hover:not(:disabled) { background: #e6b966; }
-  .fw-btn-gold:disabled { background: #2a2a2a; border-color: #2a2a2a; color: #555; cursor: not-allowed; }
-  .fw-btn-ghost { background: transparent; border-color: #2a2a2a; color: #ece5d2; flex: 0 0 auto; padding: 14px 18px; }
-  .fw-btn-ghost:hover:not(:disabled) { border-color: #d4a857; color: #d4a857; }
-  .fw-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .fw-send:not(:disabled) {
+    background: #d4a857;
+    color: #0a0a0a;
+  }
+  .fw-send:not(:disabled):hover { background: #e6b966; }
+  .fw-send:disabled { cursor: not-allowed; }
 
-  /* Success / error */
+  /* Success/error screens (replace composer area) */
   .fw-screen {
-    text-align: center; padding: 30px 24px;
+    text-align: center; padding: 24px 18px;
   }
-  .fw-screen svg { color: #d4a857; margin: 0 auto 14px; display: block; }
-  .fw-screen h3 { font-family: 'Fraunces', serif; font-size: 1.8rem; color: #f5efe1; margin: 0 0 10px; font-weight: 500; }
-  .fw-screen p { color: #b5ad99; font-size: 1rem; margin: 0 0 14px; line-height: 1.55; }
-  .fw-screen .secondary { color: #8a8a8a; font-size: 0.85rem; }
+  .fw-screen svg.success { color: #4ade80; margin: 0 auto 12px; display: block; }
+  .fw-screen h3 {
+    font-family: 'Fraunces', serif; font-size: 1.5rem;
+    color: #f5efe1; margin: 0 0 6px; font-weight: 500;
+  }
+  .fw-screen p {
+    color: #b5ad99; font-size: 0.95rem; margin: 0 0 12px; line-height: 1.5;
+  }
+  .fw-screen .secondary { color: #6a6a6a; font-size: 0.82rem; }
 
   body.fw-open { overflow: hidden; }
 </style>
@@ -307,164 +391,174 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
 
   const STEPS = [
     {
-      id: 'intro', type: 'intro',
+      id: 'intro', kind: 'intro',
       messages: [
         "Hey Grant — Dad here. 👋",
         "I built you a website to help line up more gigs around Lansing, Ann Arbor, and beyond.",
-        "I need your help making it accurate. Five to ten minutes is plenty.",
-        "If you have to step away, your progress saves automatically. Come back whenever — we'll pick up right where you left off."
+        "Help me get it right? Five to ten minutes is plenty. Your progress saves automatically — come and go as you need."
       ],
-      cta: "Let's start"
+      chips: [{ label: "Let's go", primary: true, action: 'next' }]
     },
     {
-      id: 'errors', type: 'textarea',
+      id: 'errors', kind: 'ask',
       messages: [
         "First — anything I got wrong?",
-        "Wrong year, misspelled name, a teacher I mixed up. Anything that made you wince."
+        "Wrong year, misspelled name, a teacher I mixed up. Whatever made you wince."
       ],
-      placeholder: "e.g., \"Eric Larson is Houston Symphony, not Houston Grand Opera.\""
+      placeholder: "Type what's wrong…",
+      chips: [{ label: "Nothing wrong", action: 'skip' }]
     },
     {
-      id: 'lansing_gigs', type: 'textarea',
+      id: 'lansing_gigs', kind: 'ask',
       messages: [
         "Real paid gigs you've played in or around Lansing?",
         "Venue, rough date, what you played. Approximate is fine."
       ],
-      placeholder: "e.g., \"Wedding at Eagle Eye Golf Club, September 2025 — jazz duo with pianist Mark.\""
+      placeholder: "e.g., Wedding at Eagle Eye, Sept 2025, jazz duo",
+      chips: [{ label: "Skip for now", action: 'skip' }]
     },
     {
-      id: 'ann_arbor_gigs', type: 'textarea',
+      id: 'ann_arbor_gigs', kind: 'ask',
       messages: [
         "Paid gigs in or around Ann Arbor?",
         "Same format — venue, date, what you played."
       ],
-      placeholder: "e.g., \"Pit bass for U‑M Musical Theatre, Sweeney Todd, spring 2024.\""
+      placeholder: "e.g., Pit bass for U-M Musical Theatre, Sweeney Todd",
+      chips: [{ label: "Skip", action: 'skip' }]
     },
     {
-      id: 'other_gigs', type: 'textarea',
+      id: 'other_gigs', kind: 'ask',
       messages: [
         "Other paid gigs anywhere else?",
-        "Churches, weddings, jazz dates, recording sessions, festivals — anything you want on the record."
+        "Churches, weddings, jazz dates, sessions, festivals — anything I should list."
       ],
-      placeholder: "Venue, city, what you played. List as many as come to mind."
+      placeholder: "Venue, city, what you played…",
+      chips: [{ label: "Skip", action: 'skip' }]
     },
     {
-      id: 'recital_dates', type: 'textarea',
+      id: 'recital_dates', kind: 'ask',
       messages: [
         "Recitals and major school performances?",
-        "Senior recital, juries, honors recitals, concerto competitions — dates and venues if you remember."
+        "Senior recital, juries, honors recitals, concerto competitions — dates if you remember."
       ],
-      placeholder: "e.g., \"Junior recital, U‑M SMTD, April 2022.\""
+      placeholder: "e.g., Junior recital, U-M SMTD, April 2022",
+      chips: [{ label: "Skip", action: 'skip' }]
     },
     {
-      id: 'photos', type: 'files',
+      id: 'photos', kind: 'ask',
       messages: [
         "Got photos of you playing?",
-        "Open your camera roll and pick a few. They'll compress automatically before sending."
+        "Tap the 📎 to add from your camera roll. You can add a comment too."
       ],
+      placeholder: "Optional note about the photos…",
       accept: 'image/*', multiple: true, capture: 'environment',
-      hint: 'Tap to pick from photos or take a new one'
+      chips: [{ label: "Don't have any", action: 'skip' }]
     },
     {
-      id: 'programs', type: 'files',
+      id: 'programs', kind: 'ask',
       messages: [
         "Concert or recital programs?",
-        "A phone photo of the cover is perfect. PDFs work too."
+        "A phone photo of the cover is perfect. Tap the 📎 to attach."
       ],
+      placeholder: "Optional note…",
       accept: 'image/*,application/pdf', multiple: true,
-      hint: 'Programs, posters, recital handouts'
+      chips: [{ label: "Skip", action: 'skip' }]
     },
     {
-      id: 'bio', type: 'textarea',
+      id: 'bio', kind: 'ask',
       messages: [
-        "Anything I should add to the bio?",
-        "Anything I should take out? Your call — this is your story."
+        "Anything I should change in the bio?",
+        "Add, remove, soften, sharpen — your call. This is your story."
       ],
-      placeholder: "Tell me what would make it feel more like you."
+      placeholder: "Tell me what would make it more you…",
+      chips: [{ label: "Bio is fine", action: 'skip' }]
     },
     {
-      id: 'repertoire', type: 'textarea',
+      id: 'repertoire', kind: 'ask',
       messages: [
-        "Repertoire I should mention?",
-        "Specific pieces, jazz standards you call, ensembles you play with regularly."
+        "Repertoire to mention?",
+        "Specific pieces you've performed, jazz standards you call, ensembles you play with."
       ],
-      placeholder: "e.g., \"Koussevitzky concerto, lots of Real Book, regular sub for MSU jazz combo.\""
+      placeholder: "Type what comes to mind…",
+      chips: [{ label: "Skip", action: 'skip' }]
     },
     {
-      id: 'missing', type: 'textarea',
+      id: 'missing', kind: 'ask',
       messages: [
-        "Anything else missing or wrong?",
-        "Services, recordings to link, social media, websites I should point to."
+        "Anything else missing or off?",
+        "Services, recordings, social media, websites I should link to."
       ],
-      placeholder: "Whatever's on your mind."
+      placeholder: "Whatever's on your mind…",
+      chips: [{ label: "Nothing else", action: 'skip' }]
     },
     {
-      id: 'contact', type: 'text',
+      id: 'contact', kind: 'ask',
       messages: [
         "Best way to reach you about updates?",
-        "Phone, email — whatever you actually check. (Optional.)"
+        "Phone, email — whatever you actually check. Optional."
       ],
-      placeholder: "Phone number or email"
+      placeholder: "Phone or email",
+      singleLine: true,
+      chips: [{ label: "You know how to find me", action: 'skip' }]
     },
     {
-      id: 'submit', type: 'submit',
+      id: 'submit', kind: 'submit',
       messages: [
         "That's everything.",
         "Hit Send and it all comes to me. I'll have the site updated in a day or two."
-      ]
+      ],
+      chips: [{ label: "Send to Dad →", primary: true, action: 'submit' }]
     }
   ];
 
   const state = {
     step: 0,
     answers: {},
-    files: {},     // {qid: [File, ...]} — not persisted (Files aren't JSON-able)
+    files: {}, // {qid: [File]} — not persisted
     initialized: false,
     submitted: false,
-    startedAt: null
+    sending: false
   };
 
   const $ = (id) => document.getElementById(id);
   const log = $('fw-log');
-  const inputArea = $('fw-input-area');
-  const progressBar = $('fw-progress-bar');
-  const btnNext = $('fw-next');
-  const btnSkip = $('fw-skip');
-  const btnBack = $('fw-back');
-  const btnClose = document.querySelectorAll('[data-close]');
   const launcher = $('fw-launcher');
   const modal = $('fw-modal');
-  const savedEl = $('fw-saved');
-  const subtitleEl = $('fw-subtitle');
+  const input = $('fw-input');
+  const sendBtn = $('fw-send');
+  const paperclip = $('fw-paperclip');
+  const fileInput = $('fw-fileinput');
+  const attachments = $('fw-attachments');
+  const composer = $('fw-composer');
+  const subtitle = $('fw-subtitle');
 
-  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
   // ───── Persistence ─────
   function saveState() {
     try {
-      const data = {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
         step: state.step,
         answers: state.answers,
         submitted: state.submitted,
-        startedAt: state.startedAt,
         updatedAt: Date.now()
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      }));
       flashSaved();
     } catch (e) {}
   }
   function loadSaved() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch (e) { return null; }
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); }
+    catch (e) { return null; }
   }
-  function clearSaved() { try { localStorage.removeItem(STORAGE_KEY); } catch (e) {} }
-
   function flashSaved() {
-    savedEl.classList.add('show');
-    clearTimeout(flashSaved._t);
-    flashSaved._t = setTimeout(() => savedEl.classList.remove('show'), 1400);
+    const old = log.querySelector('.fw-saved');
+    if (old) old.remove();
+    const el = document.createElement('div');
+    el.className = 'fw-saved';
+    el.textContent = '✓ Saved';
+    log.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('show'));
+    setTimeout(() => el.remove(), 1400);
   }
 
   // ───── Launcher state ─────
@@ -472,18 +566,18 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
     const saved = loadSaved();
     const label = launcher.querySelector('.fw-launcher-label');
     if (saved && !saved.submitted && saved.step > 0) {
-      label.textContent = 'Continue feedback';
+      label.textContent = 'Continue with Dad';
       launcher.classList.add('resume');
     } else if (saved && saved.submitted) {
       label.textContent = 'Send another note';
       launcher.classList.remove('resume');
     } else {
-      label.textContent = 'Help improve this site';
+      label.textContent = 'Chat with Dad';
       launcher.classList.remove('resume');
     }
   }
 
-  // ───── Modal open/close ─────
+  // ───── Open/close ─────
   function open() {
     modal.hidden = false;
     modal.setAttribute('aria-hidden', 'false');
@@ -497,238 +591,275 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
     updateLauncher();
   }
   launcher.addEventListener('click', open);
-  btnClose.forEach(el => el.addEventListener('click', close));
+  document.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', close));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) close(); });
 
-  // ───── Conversation rendering ─────
-  function makeTurn(who, isFirst) {
-    const turn = document.createElement('div');
-    turn.className = 'fw-turn ' + who;
-    if (isFirst && who === 'dad') {
-      const w = document.createElement('span');
-      w.className = 'fw-who';
-      w.textContent = 'Dad';
-      turn.appendChild(w);
-    }
-    return turn;
-  }
-
-  function appendDadMessage(text, isFirstOfTurn) {
-    const turn = makeTurn('dad', isFirstOfTurn);
-    const msg = document.createElement('div');
-    msg.className = 'fw-msg dad';
-    msg.textContent = text;
-    turn.appendChild(msg);
-    log.appendChild(turn);
+  // ───── Render messages ─────
+  function renderDadBubble(text) {
+    const row = document.createElement('div');
+    row.className = 'fw-row dad';
+    const b = document.createElement('div');
+    b.className = 'fw-bubble dad';
+    b.textContent = text;
+    row.appendChild(b);
+    log.appendChild(row);
     scrollLog();
-    return turn;
   }
 
-  function appendYouMessage(text, opts = {}) {
-    const turn = makeTurn('you', false);
-    const msg = document.createElement('div');
-    msg.className = 'fw-msg you' + (opts.skip ? ' skip' : '');
-    msg.textContent = text;
+  function renderYouBubble(text, opts = {}) {
+    const row = document.createElement('div');
+    row.className = 'fw-row you';
+    const b = document.createElement('div');
+    b.className = 'fw-bubble you' + (opts.skip ? ' skip' : '');
+    if (text) b.textContent = text;
     if (opts.files && opts.files.length) {
       const wrap = document.createElement('div');
       wrap.className = 'fw-files';
       opts.files.forEach(f => {
         if (f.type && f.type.startsWith('image/')) {
           const img = document.createElement('img');
-          img.className = 'fw-file-thumb';
-          img.alt = f.name;
           const url = URL.createObjectURL(f);
           img.src = url;
+          img.alt = f.name;
           img.onload = () => URL.revokeObjectURL(url);
           wrap.appendChild(img);
         } else {
-          const tag = document.createElement('span');
-          tag.className = 'fw-file-doc';
-          tag.textContent = '📄 ' + f.name;
-          wrap.appendChild(tag);
+          const d = document.createElement('span');
+          d.className = 'doc';
+          d.textContent = '📄 ' + f.name;
+          wrap.appendChild(d);
         }
       });
-      msg.appendChild(wrap);
+      b.appendChild(wrap);
     }
-    turn.appendChild(msg);
-    log.appendChild(turn);
+    if (!text && opts.files && opts.files.length) {
+      // No text — make it just the files
+      b.style.padding = '8px 8px';
+    }
+    row.appendChild(b);
+    log.appendChild(row);
     scrollLog();
   }
 
   function showTyping() {
+    const row = document.createElement('div');
+    row.className = 'fw-row dad';
     const t = document.createElement('div');
     t.className = 'fw-typing';
     t.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
-    log.appendChild(t);
+    row.appendChild(t);
+    log.appendChild(row);
     scrollLog();
-    return t;
+    return row;
+  }
+
+  function renderChips(chips) {
+    if (!chips || !chips.length) return null;
+    const wrap = document.createElement('div');
+    wrap.className = 'fw-chips';
+    chips.forEach(c => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'fw-chip' + (c.primary ? ' primary' : '');
+      b.textContent = c.label;
+      b.onclick = () => handleChip(c.action);
+      wrap.appendChild(b);
+    });
+    log.appendChild(wrap);
+    scrollLog();
+    return wrap;
+  }
+
+  function clearChips() {
+    log.querySelectorAll('.fw-chips').forEach(el => el.remove());
   }
 
   function scrollLog() {
     requestAnimationFrame(() => { log.scrollTop = log.scrollHeight; });
   }
 
-  // ───── Step playback ─────
+  // ───── Play step ─────
   async function playStep(skipTyping = false) {
     const s = STEPS[state.step];
-    const msgs = Array.isArray(s.messages) ? s.messages : [s.message];
-    updateProgress();
     updateSubtitle();
+    clearChips();
+
+    const msgs = Array.isArray(s.messages) ? s.messages : [s.messages];
     for (let i = 0; i < msgs.length; i++) {
       if (!skipTyping) {
-        const typing = showTyping();
-        // Pace: ~25ms per char, min 550ms, max 1600ms
-        const ms = Math.max(550, Math.min(1600, msgs[i].length * 25));
+        const t = showTyping();
+        const ms = Math.max(500, Math.min(1500, msgs[i].length * 22));
         await sleep(ms);
-        typing.remove();
+        t.remove();
       }
-      appendDadMessage(msgs[i], i === 0);
-      if (i < msgs.length - 1 && !skipTyping) await sleep(280);
+      renderDadBubble(msgs[i]);
+      if (i < msgs.length - 1 && !skipTyping) await sleep(220);
     }
-    renderInput();
-  }
-
-  function rebuildConversation() {
-    // For resume: silently replay all previous turns from saved answers
-    for (let i = 0; i < state.step; i++) {
-      const s = STEPS[i];
-      const msgs = Array.isArray(s.messages) ? s.messages : [s.message];
-      msgs.forEach((m, idx) => appendDadMessage(m, idx === 0));
-      if (s.type === 'intro') continue;
-      const a = state.answers[s.id];
-      if (a === '__skipped__') {
-        appendYouMessage('(skipped)', { skip: true });
-      } else if (a) {
-        appendYouMessage(String(a));
-      }
-    }
-  }
-
-  function updateProgress() {
-    const pct = (state.step / (STEPS.length - 1)) * 100;
-    progressBar.style.width = Math.min(100, pct) + '%';
+    renderChips(s.chips);
+    configureComposer(s);
   }
 
   function updateSubtitle() {
+    if (state.submitted) { subtitle.innerHTML = '<span class="fw-online-dot"></span>Online'; return; }
     if (state.step === 0) {
-      subtitleEl.textContent = 'A quick chat';
+      subtitle.innerHTML = '<span class="fw-online-dot"></span>Online · Welcoming you';
     } else if (state.step >= STEPS.length - 1) {
-      subtitleEl.textContent = 'Almost done';
+      subtitle.innerHTML = '<span class="fw-online-dot"></span>Online · Wrapping up';
     } else {
-      subtitleEl.textContent = 'Question ' + state.step + ' of ' + (STEPS.length - 2);
+      const total = STEPS.length - 2;
+      subtitle.innerHTML = '<span class="fw-online-dot"></span>Question ' + state.step + ' of ' + total;
     }
   }
 
-  // ───── Input rendering ─────
-  function currentValue() {
-    const s = STEPS[state.step];
-    if (s.type === 'textarea') return inputArea.querySelector('textarea')?.value.trim();
-    if (s.type === 'text') return inputArea.querySelector('input[type="text"]')?.value.trim();
-    if (s.type === 'files') return state.files[s.id] || [];
-    return null;
+  function configureComposer(s) {
+    if (s.kind === 'intro' || s.kind === 'submit') {
+      composer.style.display = 'none';
+      return;
+    }
+    composer.style.display = '';
+    input.value = '';
+    input.placeholder = s.placeholder || 'Type a message…';
+    input.disabled = false;
+    if (s.singleLine) {
+      input.style.maxHeight = '50px';
+    } else {
+      input.style.maxHeight = '';
+    }
+    // Paperclip visibility
+    if (s.accept) {
+      paperclip.hidden = false;
+      paperclip.classList.add('glow');
+      fileInput.accept = s.accept;
+      fileInput.multiple = !!s.multiple;
+      if (s.capture) fileInput.setAttribute('capture', s.capture);
+      else fileInput.removeAttribute('capture');
+    } else {
+      paperclip.hidden = true;
+      paperclip.classList.remove('glow');
+    }
+    renderAttachments();
+    updateSendState();
+    setTimeout(() => input.focus(), 100);
   }
 
-  function renderInput() {
+  // ───── Composer behavior ─────
+  function autoGrow() {
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 220) + 'px';
+  }
+
+  function updateSendState() {
+    const hasText = input.value.trim().length > 0;
     const s = STEPS[state.step];
-    inputArea.innerHTML = '';
+    const hasFiles = (state.files[s?.id] || []).length > 0;
+    sendBtn.disabled = !(hasText || hasFiles);
+  }
 
-    if (s.type === 'intro') {
-      btnNext.textContent = s.cta || 'Continue';
-      btnSkip.style.display = 'none';
-      btnBack.style.display = 'none';
-      btnNext.disabled = false;
-      return;
-    }
-    if (s.type === 'submit') {
-      btnNext.textContent = 'Send to Dad →';
-      btnSkip.style.display = 'none';
-      btnBack.style.display = 'inline-flex';
-      btnNext.disabled = false;
-      return;
-    }
-    btnSkip.style.display = 'inline-flex';
-    btnBack.style.display = 'inline-flex';
-    btnNext.textContent = 'Send →';
-
-    if (s.type === 'textarea') {
-      const ta = document.createElement('textarea');
-      ta.placeholder = s.placeholder || '';
-      ta.value = state.answers[s.id] && state.answers[s.id] !== '__skipped__' ? state.answers[s.id] : '';
-      ta.oninput = () => { btnNext.disabled = !ta.value.trim(); };
-      ta.onkeydown = (e) => {
-        if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && ta.value.trim()) advance(false);
-      };
-      inputArea.appendChild(ta);
-      btnNext.disabled = !ta.value.trim();
-    } else if (s.type === 'text') {
-      const ip = document.createElement('input');
-      ip.type = 'text';
-      ip.placeholder = s.placeholder || '';
-      ip.value = state.answers[s.id] && state.answers[s.id] !== '__skipped__' ? state.answers[s.id] : '';
-      ip.oninput = () => { btnNext.disabled = !ip.value.trim(); };
-      ip.onkeydown = (e) => { if (e.key === 'Enter' && ip.value.trim()) advance(false); };
-      inputArea.appendChild(ip);
-      btnNext.disabled = !ip.value.trim();
-    } else if (s.type === 'files') {
-      const label = document.createElement('label');
-      label.className = 'filepick';
-      label.innerHTML = '<span>＋ Add files</span><small>' + (s.hint || '') + '</small>';
-      const ip = document.createElement('input');
-      ip.type = 'file';
-      ip.accept = s.accept;
-      if (s.multiple) ip.multiple = true;
-      if (s.capture) ip.capture = s.capture;
-      label.appendChild(ip);
-      inputArea.appendChild(label);
-
-      const picked = document.createElement('div');
-      picked.className = 'picked';
-      inputArea.appendChild(picked);
-
-      function refresh() {
-        picked.innerHTML = '';
-        (state.files[s.id] || []).forEach((f, i) => {
-          const row = document.createElement('div');
-          row.className = 'row';
-          row.innerHTML = '<span>' +
-            (f.type && f.type.startsWith('image/') ? '🖼️' : '📄') +
-            ' ' + f.name +
-            ' <span class="meta">' + Math.round(f.size/1024) + ' KB</span></span>';
-          const x = document.createElement('button');
-          x.type = 'button';
-          x.textContent = '×';
-          x.setAttribute('aria-label', 'Remove file');
-          x.onclick = () => { state.files[s.id].splice(i, 1); refresh(); };
-          row.appendChild(x);
-          picked.appendChild(row);
-        });
-        btnNext.disabled = !(state.files[s.id] || []).length;
+  function renderAttachments() {
+    attachments.innerHTML = '';
+    const s = STEPS[state.step];
+    if (!s) return;
+    const arr = state.files[s.id] || [];
+    arr.forEach((f, i) => {
+      const chip = document.createElement('div');
+      chip.className = 'fw-att-chip';
+      if (f.type && f.type.startsWith('image/')) {
+        const img = document.createElement('img');
+        const url = URL.createObjectURL(f);
+        img.src = url;
+        img.alt = '';
+        img.onload = () => URL.revokeObjectURL(url);
+        chip.appendChild(img);
+      } else {
+        const ic = document.createElement('span');
+        ic.className = 'icon';
+        ic.textContent = '📄';
+        chip.appendChild(ic);
       }
-      refresh();
-
-      ip.onchange = async () => {
-        state.files[s.id] = state.files[s.id] || [];
-        const files = Array.from(ip.files);
-        // Compress images
-        for (const file of files) {
-          if (file.type.startsWith('image/')) {
-            try {
-              const c = await compressImage(file);
-              state.files[s.id].push(c);
-            } catch (e) {
-              state.files[s.id].push(file);
-            }
-          } else {
-            state.files[s.id].push(file);
-          }
-        }
-        ip.value = '';
-        refresh();
+      const name = document.createElement('span');
+      name.textContent = f.name.length > 18 ? f.name.slice(0, 16) + '…' : f.name;
+      chip.appendChild(name);
+      const rm = document.createElement('button');
+      rm.type = 'button';
+      rm.textContent = '×';
+      rm.setAttribute('aria-label', 'Remove');
+      rm.onclick = () => {
+        state.files[s.id].splice(i, 1);
+        renderAttachments();
+        updateSendState();
       };
+      chip.appendChild(rm);
+      attachments.appendChild(chip);
+    });
+  }
+
+  input.addEventListener('input', () => { autoGrow(); updateSendState(); });
+  input.addEventListener('keydown', (e) => {
+    const s = STEPS[state.step];
+    if (e.key === 'Enter' && !e.shiftKey && (s?.singleLine || (e.metaKey || e.ctrlKey))) {
+      e.preventDefault();
+      if (!sendBtn.disabled) handleSend();
+    }
+  });
+
+  paperclip.addEventListener('click', () => fileInput.click());
+
+  fileInput.addEventListener('change', async () => {
+    const s = STEPS[state.step];
+    if (!s) return;
+    state.files[s.id] = state.files[s.id] || [];
+    for (const f of Array.from(fileInput.files)) {
+      if (f.type.startsWith('image/')) {
+        try { state.files[s.id].push(await compressImage(f)); }
+        catch (e) { state.files[s.id].push(f); }
+      } else {
+        state.files[s.id].push(f);
+      }
+    }
+    fileInput.value = '';
+    renderAttachments();
+    updateSendState();
+  });
+
+  sendBtn.addEventListener('click', handleSend);
+
+  function handleSend() {
+    const s = STEPS[state.step];
+    if (!s || s.kind !== 'ask') return;
+    const text = input.value.trim();
+    const files = state.files[s.id] || [];
+    if (!text && !files.length) return;
+
+    state.answers[s.id] = text || ('[' + files.length + ' file' + (files.length > 1 ? 's' : '') + ']');
+    renderYouBubble(text, { files });
+
+    advance();
+  }
+
+  function handleChip(action) {
+    clearChips();
+    const s = STEPS[state.step];
+    if (action === 'next') {
+      advance();
+    } else if (action === 'skip') {
+      state.answers[s.id] = '__skipped__';
+      delete state.files[s.id];
+      renderYouBubble('(skipped)', { skip: true });
+      advance();
+    } else if (action === 'submit') {
+      submit();
+    } else if (action === 'close') {
+      close();
     }
   }
 
-  // ───── Image compression ─────
+  async function advance() {
+    state.step++;
+    if (state.step >= STEPS.length) state.step = STEPS.length - 1;
+    saveState();
+    await playStep();
+  }
+
   async function compressImage(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -755,97 +886,81 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
     });
   }
 
-  // ───── Flow control ─────
-  async function advance(skipped) {
-    const s = STEPS[state.step];
-    if (s.type === 'submit') { submit(); return; }
-    if (s.type === 'intro') {
-      state.step++; saveState();
-      await playStep();
-      return;
-    }
-
-    if (skipped) {
-      state.answers[s.id] = '__skipped__';
-      delete state.files[s.id];
-      appendYouMessage('(skipped)', { skip: true });
-    } else if (s.type === 'files') {
-      const arr = state.files[s.id] || [];
-      if (arr.length) {
-        state.answers[s.id] = arr.length + ' file' + (arr.length > 1 ? 's' : '') + ' attached';
-        appendYouMessage(state.answers[s.id], { files: arr });
-      } else {
-        state.answers[s.id] = '__skipped__';
-        appendYouMessage('(skipped)', { skip: true });
-      }
+  // ───── Resume on open ─────
+  function initialize() {
+    state.initialized = true;
+    const saved = loadSaved();
+    if (saved && !saved.submitted && saved.step > 0) {
+      state.step = saved.step;
+      state.answers = saved.answers || {};
+      rebuildLog();
+      const welcome = document.createElement('div');
+      welcome.className = 'fw-row dad';
+      welcome.innerHTML = '<div class="fw-bubble dad">Welcome back, Grant. Picking up where we left off.</div>';
+      log.appendChild(welcome);
+      setTimeout(() => playStep(true), 250);
+    } else if (saved && saved.submitted) {
+      state.step = 0;
+      state.answers = {};
+      const greet = document.createElement('div');
+      greet.className = 'fw-row dad';
+      greet.innerHTML = '<div class="fw-bubble dad">You already sent me a batch — thanks. Got more? We can start a new round.</div>';
+      log.appendChild(greet);
+      setTimeout(() => playStep(true), 250);
     } else {
-      const v = currentValue();
-      state.answers[s.id] = v;
-      appendYouMessage(v);
+      playStep();
     }
-    state.step++;
-    saveState();
-    if (state.step >= STEPS.length) state.step = STEPS.length - 1;
-    await playStep();
   }
 
-  async function goBack() {
-    if (state.step === 0) return;
-    // Remove last two turns (dad question + you answer)
-    const turns = log.querySelectorAll('.fw-turn');
-    // Remove dad turn of current question
-    for (let i = turns.length - 1; i >= 0 && turns[i].classList.contains('dad'); i--) {
-      turns[i].remove();
+  function rebuildLog() {
+    for (let i = 0; i < state.step; i++) {
+      const s = STEPS[i];
+      if (!s) continue;
+      const msgs = Array.isArray(s.messages) ? s.messages : [s.messages];
+      msgs.forEach(m => renderDadBubble(m));
+      if (s.kind === 'intro') continue;
+      const a = state.answers[s.id];
+      if (a === '__skipped__') renderYouBubble('(skipped)', { skip: true });
+      else if (a) renderYouBubble(String(a));
     }
-    // Remove the previous "you" answer turn
-    const remaining = log.querySelectorAll('.fw-turn');
-    if (remaining.length && remaining[remaining.length - 1].classList.contains('you')) {
-      remaining[remaining.length - 1].remove();
-    }
-    state.step--;
-    saveState();
-    await playStep(true); // skip typing on back
   }
 
   // ───── Submit ─────
   async function submit() {
-    if (state.submitted) return;
-    state.submitted = true;
-    btnNext.disabled = true;
-    btnSkip.disabled = true;
-    btnBack.disabled = true;
-    inputArea.innerHTML = '<p style="color:#8a8a8a;text-align:center;padding:18px;">Sending to Dad…</p>';
+    if (state.sending) return;
+    state.sending = true;
+    composer.style.display = 'none';
+
+    // Replace the chips area / show sending state
+    const sendingMsg = document.createElement('div');
+    sendingMsg.className = 'fw-row dad';
+    sendingMsg.innerHTML = '<div class="fw-bubble dad">Sending to me…</div>';
+    log.appendChild(sendingMsg);
+    scrollLog();
 
     const fd = new FormData();
     fd.append('access_key', WEB3FORMS_KEY);
     fd.append('subject', '🎻 Grant feedback — ' + new Date().toLocaleString());
-    fd.append('from_name', 'Grant (feedback wizard)');
+    fd.append('from_name', 'Grant (feedback chat)');
 
-    const lines = ['Grant submitted the feedback wizard.', '', '─────────────', ''];
+    const lines = ['Grant submitted the feedback chat.', '', '─────────────', ''];
     STEPS.forEach(s => {
-      if (s.type === 'intro' || s.type === 'submit') return;
+      if (s.kind === 'intro' || s.kind === 'submit') return;
       const ans = state.answers[s.id];
       const fs = state.files[s.id] || [];
-      const qText = Array.isArray(s.messages) ? s.messages.join(' ') : s.message;
+      const qText = Array.isArray(s.messages) ? s.messages.join(' ') : s.messages;
       lines.push('Q: ' + qText);
-      if (s.type === 'files') {
-        lines.push('A: ' + (fs.length ? fs.length + ' file(s) attached' : '(skipped)'));
-      } else if (ans === '__skipped__') {
-        lines.push('A: (skipped)');
-      } else {
-        lines.push('A: ' + (ans || '(skipped)'));
-      }
+      if (fs.length) lines.push('A: ' + (ans && ans !== '__skipped__' ? ans + ' (' + fs.length + ' file' + (fs.length > 1 ? 's' : '') + ')' : fs.length + ' file(s) attached'));
+      else if (ans === '__skipped__' || !ans) lines.push('A: (skipped)');
+      else lines.push('A: ' + ans);
       lines.push('');
     });
     fd.append('message', lines.join('\n'));
 
-    let attachIdx = 0;
+    let i = 0;
     Object.entries(state.files).forEach(([qid, arr]) => {
-      arr.forEach((f) => {
-        if (attachIdx < 5) {
-          fd.append('attachment[' + attachIdx + ']', f, qid + '-' + f.name);
-          attachIdx++;
-        }
+      arr.forEach(f => {
+        if (i < 5) { fd.append('attachment[' + i + ']', f, qid + '-' + f.name); i++; }
       });
     });
 
@@ -853,86 +968,29 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
       const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd });
       const j = await res.json();
       if (j.success) {
+        state.submitted = true;
         saveState();
-        showSuccess();
+        sendingMsg.remove();
+        renderDadBubble("Got it. Thanks Grant — I'll update the site in a day or two.");
+        renderChips([{ label: "Close chat", primary: true, action: 'close' }]);
       } else {
-        state.submitted = false;
-        showError(j.message || 'Submission failed');
+        state.sending = false;
+        sendingMsg.remove();
+        renderDadBubble("Couldn't send: " + (j.message || 'unknown error') + ". Your answers are saved here — try again?");
+        renderChips([{ label: "Try again", primary: true, action: 'submit' }]);
       }
     } catch (e) {
-      state.submitted = false;
-      showError(e.message || 'Network error');
+      state.sending = false;
+      sendingMsg.remove();
+      renderDadBubble("Couldn't reach the server. Your answers are saved.");
+      renderChips([{ label: "Try again", primary: true, action: 'submit' }]);
     }
   }
-
-  function showSuccess() {
-    inputArea.innerHTML = `
-      <div class="fw-screen">
-        <svg viewBox="0 0 24 24" width="54" height="54" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
-        </svg>
-        <h3>Sent.</h3>
-        <p>Dad will update the site in the next day or two. Thanks Grant.</p>
-        <p class="secondary">You can close this and come back anytime to add more.</p>
-      </div>`;
-    btnNext.style.display = 'none';
-    btnSkip.style.display = 'none';
-    btnBack.textContent = 'Close';
-    btnBack.disabled = false;
-    btnBack.style.display = 'inline-flex';
-    btnBack.onclick = close;
-  }
-
-  function showError(msg) {
-    inputArea.innerHTML = `
-      <div class="fw-screen">
-        <h3 style="color:#ffb3a8">Couldn't send.</h3>
-        <p>${msg}</p>
-        <p class="secondary">Your answers are saved here — try again, or text Dad and he'll grab them.</p>
-      </div>`;
-    btnNext.disabled = false;
-    btnNext.style.display = 'inline-flex';
-    btnNext.textContent = 'Try again';
-    btnSkip.style.display = 'none';
-    btnNext.onclick = () => { state.submitted = false; submit(); };
-  }
-
-  // ───── Init / resume ─────
-  function initialize() {
-    state.initialized = true;
-    const saved = loadSaved();
-    if (saved && !saved.submitted && saved.step > 0) {
-      // Resume mode
-      state.step = saved.step;
-      state.answers = saved.answers || {};
-      state.startedAt = saved.startedAt;
-      rebuildConversation();
-      // Insert a soft welcome-back marker before the current step
-      appendDadMessage("Welcome back, Grant. Picking up where we left off.", true);
-      setTimeout(() => playStep(true), 200);
-    } else if (saved && saved.submitted) {
-      // Already submitted — offer to send another
-      state.startedAt = Date.now();
-      state.answers = {};
-      state.step = 0;
-      appendDadMessage("You already sent me a batch — thanks. Got more? We can start a new round.", true);
-      setTimeout(() => playStep(true), 200);
-    } else {
-      state.startedAt = Date.now();
-      playStep();
-    }
-  }
-
-  // ───── Bind buttons ─────
-  btnNext.addEventListener('click', () => advance(false));
-  btnSkip.addEventListener('click', () => advance(true));
-  btnBack.addEventListener('click', goBack);
 
   // ───── Boot ─────
   updateLauncher();
   setTimeout(() => launcher.classList.remove('hidden'), 600);
 
-  // Auto-open via ?feedback=1
   if (new URLSearchParams(location.search).get('feedback') === '1') {
     setTimeout(open, 500);
   }
