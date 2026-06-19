@@ -4,59 +4,75 @@
 const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
 ---
 <!-- Floating launcher -->
-<button id="fw-launcher" type="button" aria-label="Send feedback" class="fw-launcher hidden">
-  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M3 12c0-4.97 4.03-9 9-9s9 4.03 9 9-4.03 9-9 9c-1.4 0-2.73-.32-3.92-.9L3 21l.9-5.08A8.96 8.96 0 0 1 3 12z"/>
+<button id="fw-launcher" type="button" aria-label="Open feedback chat" class="fw-launcher hidden">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
   </svg>
-  <span>Help improve this site</span>
+  <span class="fw-launcher-label">Help improve this site</span>
+  <span class="fw-launcher-dot" aria-hidden="true"></span>
 </button>
 
 <!-- Modal -->
 <div id="fw-modal" class="fw-modal" hidden aria-hidden="true" role="dialog" aria-labelledby="fw-title">
   <div class="fw-backdrop" data-close></div>
-  <div class="fw-sheet">
+  <div class="fw-sheet" role="document">
     <header class="fw-header">
-      <div class="fw-progress"><div class="fw-progress-bar" id="fw-progress-bar"></div></div>
+      <div class="fw-progress" aria-hidden="true"><div class="fw-progress-bar" id="fw-progress-bar"></div></div>
       <div class="fw-title-row">
-        <p id="fw-title" class="fw-title">From Dad · A few questions</p>
-        <button type="button" class="fw-close" data-close aria-label="Close">×</button>
+        <div>
+          <p id="fw-title" class="fw-title">From Dad</p>
+          <p id="fw-subtitle" class="fw-subtitle">A quick chat</p>
+        </div>
+        <div class="fw-header-right">
+          <span id="fw-saved" class="fw-saved" aria-live="polite">Saved</span>
+          <button type="button" class="fw-close" data-close aria-label="Close">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
       </div>
     </header>
 
-    <main class="fw-log" id="fw-log"></main>
+    <main class="fw-log" id="fw-log" aria-live="polite"></main>
 
     <footer class="fw-footer">
-      <div id="fw-input-area"></div>
+      <div id="fw-input-area" class="fw-input-area"></div>
       <div class="fw-actions">
         <button type="button" id="fw-back" class="fw-btn fw-btn-ghost">Back</button>
         <button type="button" id="fw-skip" class="fw-btn fw-btn-ghost">Skip</button>
-        <button type="button" id="fw-next" class="fw-btn fw-btn-gold">Next →</button>
+        <button type="button" id="fw-next" class="fw-btn fw-btn-gold">Send →</button>
       </div>
     </footer>
   </div>
 </div>
 
 <style>
+  /* ───── Launcher ───── */
   .fw-launcher {
     position: fixed; right: 16px; bottom: 16px; z-index: 60;
-    display: inline-flex; align-items: center; gap: 8px;
+    display: inline-flex; align-items: center; gap: 10px;
     background: #d4a857; color: #0a0a0a;
     border: none; border-radius: 999px;
-    padding: 12px 18px;
-    font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 600;
-    letter-spacing: 0.02em;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(212,168,87,0.5);
+    padding: 14px 20px;
+    font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 600;
+    letter-spacing: 0.01em;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.45), 0 0 0 1px rgba(212,168,87,0.5);
     cursor: pointer;
-    transition: transform 0.15s, background 0.15s;
+    transition: transform 0.18s, background 0.18s, box-shadow 0.18s;
   }
-  .fw-launcher:hover { background: #e6b966; transform: translateY(-2px); }
+  .fw-launcher:hover { background: #e6b966; transform: translateY(-2px); box-shadow: 0 14px 36px rgba(0,0,0,0.55), 0 0 0 1px rgba(212,168,87,0.7); }
   .fw-launcher.hidden { display: none; }
+  .fw-launcher-dot {
+    display: none;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #0a0a0a;
+  }
+  .fw-launcher.resume .fw-launcher-dot { display: block; }
   @media (max-width: 640px) {
-    .fw-launcher { right: 12px; bottom: 12px; padding: 12px 16px; font-size: 0.8rem; }
-    .fw-launcher span { display: none; }
-    .fw-launcher { padding: 14px; width: 52px; height: 52px; justify-content: center; }
+    .fw-launcher { right: 12px; bottom: 12px; padding: 13px 16px; }
+    .fw-launcher-label { font-size: 0.82rem; }
   }
 
+  /* ───── Modal shell ───── */
   .fw-modal {
     position: fixed; inset: 0; z-index: 70;
     display: flex; align-items: flex-end; justify-content: center;
@@ -64,229 +80,348 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
   .fw-modal[hidden] { display: none; }
   .fw-backdrop {
     position: absolute; inset: 0;
-    background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+    background: rgba(0,0,0,0.78); backdrop-filter: blur(6px);
+    animation: fw-fade 0.2s ease-out;
   }
+  @keyframes fw-fade { from { opacity: 0; } to { opacity: 1; } }
   .fw-sheet {
     position: relative;
-    width: 100%; max-width: 640px;
-    height: 100vh; max-height: 100vh;
+    width: 100%; max-width: 680px;
+    height: 100dvh; max-height: 100dvh;
     background: #0a0a0a;
     display: flex; flex-direction: column;
     border-top: 1px solid #2a2a2a;
+    animation: fw-rise 0.25s ease-out;
   }
+  @keyframes fw-rise { from { transform: translateY(20px); opacity: 0.5; } to { transform: none; opacity: 1; } }
   @media (min-width: 768px) {
     .fw-modal { align-items: center; padding: 24px; }
-    .fw-sheet { height: 85vh; max-height: 720px; border: 1px solid #2a2a2a; border-radius: 10px; overflow: hidden; }
+    .fw-sheet { height: 88dvh; max-height: 760px; border: 1px solid #2a2a2a; border-radius: 14px; overflow: hidden; }
   }
 
-  .fw-header {
-    border-bottom: 1px solid #2a2a2a;
-    background: #0a0a0a;
-  }
-  .fw-progress { height: 3px; background: #2a2a2a; }
-  .fw-progress-bar { height: 100%; background: #d4a857; width: 0%; transition: width 0.3s; }
+  /* ───── Header ───── */
+  .fw-header { border-bottom: 1px solid #2a2a2a; background: #0a0a0a; flex-shrink: 0; }
+  .fw-progress { height: 3px; background: #1c1c1c; }
+  .fw-progress-bar { height: 100%; background: linear-gradient(90deg, #b88c3a, #d4a857); width: 0%; transition: width 0.4s ease-out; }
   .fw-title-row {
     display: flex; align-items: center; justify-content: space-between;
     padding: 14px 18px;
   }
   .fw-title {
     margin: 0; font-family: 'Inter', sans-serif;
-    font-size: 0.7rem; font-weight: 600; color: #8a8a8a;
-    text-transform: uppercase; letter-spacing: 0.22em;
+    font-size: 0.95rem; font-weight: 600; color: #f5efe1;
+    letter-spacing: 0.01em;
   }
+  .fw-subtitle {
+    margin: 1px 0 0; font-family: 'Inter', sans-serif;
+    font-size: 0.72rem; font-weight: 500; color: #8a8a8a;
+    letter-spacing: 0.02em;
+  }
+  .fw-header-right { display: flex; align-items: center; gap: 10px; }
+  .fw-saved {
+    font-size: 0.7rem; color: #8a8a8a;
+    letter-spacing: 0.04em;
+    opacity: 0; transition: opacity 0.25s;
+  }
+  .fw-saved.show { opacity: 1; color: #d4a857; }
+  .fw-saved::before { content: '✓ '; }
   .fw-close {
-    background: none; border: none; color: #f5efe1;
-    width: 36px; height: 36px; font-size: 1.6rem; line-height: 1;
-    cursor: pointer; border-radius: 4px;
+    background: none; border: none; color: #8a8a8a;
+    width: 38px; height: 38px;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; border-radius: 8px;
   }
-  .fw-close:hover { background: #1c1c1c; color: #d4a857; }
+  .fw-close:hover { background: #1c1c1c; color: #f5efe1; }
 
+  /* ───── Conversation log ───── */
   .fw-log {
-    flex: 1; overflow-y: auto;
-    padding: 24px 18px 12px;
-    display: flex; flex-direction: column; gap: 14px;
+    flex: 1; min-height: 0;
+    overflow-y: auto;
+    padding: 24px 20px 12px;
+    display: flex; flex-direction: column; gap: 18px;
     -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
   }
+  /* Pull subsequent dad bubbles in same turn closer together */
+  .fw-turn + .fw-turn { margin-top: 0; }
+  .fw-turn {
+    display: flex; flex-direction: column; gap: 6px;
+    max-width: 100%;
+  }
+  .fw-turn.you { align-items: flex-end; }
+  .fw-turn.dad { align-items: flex-start; }
+
+  .fw-who {
+    font-size: 0.62rem; color: #d4a857;
+    text-transform: uppercase; letter-spacing: 0.22em;
+    font-weight: 600;
+    padding: 0 4px;
+    margin-bottom: 2px;
+  }
+
   .fw-msg {
-    max-width: 88%;
-    padding: 14px 16px;
-    border-radius: 14px;
-    font-family: 'Inter', sans-serif; font-size: 0.96rem;
+    max-width: 86%;
+    padding: 13px 17px;
+    border-radius: 18px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.98rem;
     line-height: 1.55;
-    animation: fw-in 0.25s ease-out;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    animation: fw-in 0.28s cubic-bezier(0.2, 0.9, 0.3, 1);
   }
   @keyframes fw-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
   .fw-msg.dad {
-    align-self: flex-start;
-    background: #141414; border: 1px solid #2a2a2a;
-    color: #f5efe1;
-    border-bottom-left-radius: 4px;
-    white-space: pre-wrap;
+    background: #161616; border: 1px solid #232323;
+    color: #ece5d2;
+    border-bottom-left-radius: 6px;
   }
-  .fw-msg.dad > span:last-child { display: block; }
-  .fw-msg.dad .who {
-    display: block; font-size: 0.65rem; color: #d4a857;
-    text-transform: uppercase; letter-spacing: 0.2em;
-    margin-bottom: 6px;
-  }
+  .fw-msg.dad + .fw-msg.dad { border-top-left-radius: 6px; }
   .fw-msg.you {
-    align-self: flex-end;
     background: #d4a857; color: #0a0a0a;
-    border-bottom-right-radius: 4px;
-    white-space: pre-wrap;
+    border-bottom-right-radius: 6px;
+    font-weight: 500;
   }
   .fw-msg.you.skip {
     background: transparent; color: #8a8a8a;
-    border: 1px dashed #2a2a2a; font-style: italic;
-  }
-  .fw-msg.you .files {
-    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;
-  }
-  .fw-msg.you .files span {
-    background: rgba(0,0,0,0.15); color: #0a0a0a; padding: 4px 10px;
-    border-radius: 6px; font-size: 0.8rem;
+    border: 1px dashed #2a2a2a; font-style: italic; font-weight: 400;
   }
 
+  /* Image previews in user bubbles */
+  .fw-files {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;
+  }
+  .fw-file-thumb {
+    width: 72px; height: 72px; border-radius: 8px;
+    object-fit: cover; background: rgba(0,0,0,0.15);
+    border: 1px solid rgba(0,0,0,0.15);
+  }
+  .fw-file-doc {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(0,0,0,0.15); padding: 6px 12px;
+    border-radius: 6px; font-size: 0.82rem;
+  }
+
+  /* Typing indicator */
+  .fw-typing {
+    display: inline-flex; gap: 5px; align-items: center;
+    padding: 14px 18px;
+    background: #161616; border: 1px solid #232323;
+    border-radius: 18px; border-bottom-left-radius: 6px;
+    align-self: flex-start;
+  }
+  .fw-typing .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #6a6a6a;
+    animation: fw-blink 1.3s infinite ease-in-out;
+  }
+  .fw-typing .dot:nth-child(2) { animation-delay: 0.2s; }
+  .fw-typing .dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes fw-blink {
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.9); }
+    40% { opacity: 1; transform: scale(1.1); }
+  }
+
+  /* ───── Footer / input ───── */
   .fw-footer {
     border-top: 1px solid #2a2a2a;
-    padding: 14px 18px 18px;
+    padding: 14px 18px;
     background: #0a0a0a;
-    padding-bottom: max(18px, env(safe-area-inset-bottom));
+    padding-bottom: max(14px, env(safe-area-inset-bottom));
+    flex-shrink: 0;
   }
-  #fw-input-area textarea,
-  #fw-input-area input[type="text"],
-  #fw-input-area input[type="email"] {
+  .fw-input-area:empty { display: none; }
+  .fw-input-area textarea,
+  .fw-input-area input[type="text"],
+  .fw-input-area input[type="email"] {
     width: 100%;
-    background: #141414; color: #f5efe1;
-    border: 1px solid #2a2a2a; border-radius: 8px;
-    padding: 14px;
-    font-family: 'Inter', sans-serif; font-size: 16px; /* prevent iOS zoom */
+    background: #161616; color: #f5efe1;
+    border: 1px solid #2a2a2a; border-radius: 12px;
+    padding: 14px 16px;
+    font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.5;
     resize: none;
     -webkit-appearance: none;
+    transition: border-color 0.15s;
   }
-  #fw-input-area textarea { min-height: 100px; }
-  #fw-input-area textarea:focus,
-  #fw-input-area input:focus { border-color: #d4a857; outline: none; }
-  #fw-input-area .filepick {
-    display: block; cursor: pointer;
-    border: 1px dashed #2a2a2a; border-radius: 8px;
+  .fw-input-area textarea { min-height: 90px; max-height: 30dvh; }
+  .fw-input-area textarea:focus,
+  .fw-input-area input:focus { border-color: #d4a857; outline: none; }
+  .fw-input-area .filepick {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    cursor: pointer;
+    border: 1px dashed #3a3a3a; border-radius: 12px;
     padding: 22px 16px; text-align: center;
-    color: #f5efe1; font-size: 0.96rem;
+    color: #f5efe1; font-size: 0.95rem;
     background: #141414;
     transition: border-color 0.15s, background 0.15s;
   }
-  #fw-input-area .filepick:hover { border-color: #d4a857; background: #1c1c1c; }
-  #fw-input-area .filepick small {
+  .fw-input-area .filepick:hover { border-color: #d4a857; background: #1a1a1a; }
+  .fw-input-area .filepick small {
     display: block; color: #8a8a8a; font-size: 0.78rem; margin-top: 6px;
-    letter-spacing: 0.02em;
   }
-  #fw-input-area .picked {
-    margin-top: 10px; display: flex; flex-direction: column; gap: 6px;
-  }
-  #fw-input-area .picked .row {
+  .fw-input-area .picked { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .fw-input-area .picked .row {
     display: flex; justify-content: space-between; align-items: center;
-    background: #141414; border: 1px solid #2a2a2a;
-    padding: 8px 12px; border-radius: 6px; font-size: 0.85rem;
+    background: #161616; border: 1px solid #2a2a2a;
+    padding: 9px 14px; border-radius: 8px; font-size: 0.86rem; color: #f5efe1;
   }
-  #fw-input-area .picked .row button {
+  .fw-input-area .picked .row .meta { color: #8a8a8a; font-size: 0.76rem; margin-left: 8px; }
+  .fw-input-area .picked .row button {
     background: none; border: none; color: #8a8a8a; cursor: pointer;
-    font-size: 1.1rem; padding: 0 4px;
+    font-size: 1.2rem; padding: 0 4px; line-height: 1;
   }
-  #fw-input-area .picked .row button:hover { color: #d4a857; }
-  #fw-input-area input[type="file"] { display: none; }
+  .fw-input-area .picked .row button:hover { color: #d4a857; }
+  .fw-input-area input[type="file"] { display: none; }
 
   .fw-actions { display: flex; gap: 8px; margin-top: 12px; }
   .fw-btn {
-    flex: 1;
-    border-radius: 8px; border: 1px solid;
+    flex: 1; border-radius: 10px; border: 1px solid;
     padding: 14px 12px; min-height: 50px;
     font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 600;
-    letter-spacing: 0.02em; cursor: pointer;
-    transition: background 0.15s, color 0.15s;
+    letter-spacing: 0.01em; cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
   }
   .fw-btn-gold { background: #d4a857; border-color: #d4a857; color: #0a0a0a; }
-  .fw-btn-gold:hover { background: #e6b966; }
+  .fw-btn-gold:hover:not(:disabled) { background: #e6b966; }
   .fw-btn-gold:disabled { background: #2a2a2a; border-color: #2a2a2a; color: #555; cursor: not-allowed; }
-  .fw-btn-ghost { background: transparent; border-color: #2a2a2a; color: #f5efe1; }
-  .fw-btn-ghost:hover { border-color: #d4a857; color: #d4a857; }
+  .fw-btn-ghost { background: transparent; border-color: #2a2a2a; color: #ece5d2; flex: 0 0 auto; padding: 14px 18px; }
+  .fw-btn-ghost:hover:not(:disabled) { border-color: #d4a857; color: #d4a857; }
   .fw-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  .fw-success {
-    text-align: center; padding: 40px 24px;
+  /* Success / error */
+  .fw-screen {
+    text-align: center; padding: 30px 24px;
   }
-  .fw-success svg { color: #d4a857; margin: 0 auto 16px; }
-  .fw-success h3 { font-family: 'Fraunces', serif; font-size: 2rem; color: #f5efe1; margin: 0 0 8px; }
-  .fw-success p { color: #8a8a8a; font-size: 1rem; margin: 0 0 18px; }
+  .fw-screen svg { color: #d4a857; margin: 0 auto 14px; display: block; }
+  .fw-screen h3 { font-family: 'Fraunces', serif; font-size: 1.8rem; color: #f5efe1; margin: 0 0 10px; font-weight: 500; }
+  .fw-screen p { color: #b5ad99; font-size: 1rem; margin: 0 0 14px; line-height: 1.55; }
+  .fw-screen .secondary { color: #8a8a8a; font-size: 0.85rem; }
 
   body.fw-open { overflow: hidden; }
 </style>
 
 <script is:inline define:vars={{ WEB3FORMS_KEY }}>
 (function() {
+  const STORAGE_KEY = 'gpb_feedback_v1';
+
   const STEPS = [
     {
       id: 'intro', type: 'intro',
-      message: "Hey Grant — Dad here.\n\nI built you a website to help you book more gigs. Take 5 to 10 minutes and help me get it right.\n\nSkip anything you don't want to answer. Your phone is fine — you can upload photos as you go.",
-      cta: 'Let’s go'
+      messages: [
+        "Hey Grant — Dad here. 👋",
+        "I built you a website to help line up more gigs around Lansing, Ann Arbor, and beyond.",
+        "I need your help making it accurate. Five to ten minutes is plenty.",
+        "If you have to step away, your progress saves automatically. Come back whenever — we'll pick up right where you left off."
+      ],
+      cta: "Let's start"
     },
     {
       id: 'errors', type: 'textarea',
-      message: "First — any factual errors?\n\nWrong years, misspelled names, teachers I got mixed up, anything that made you wince?",
-      placeholder: "e.g., “Eric Larson is Houston Symphony, not Houston Grand Opera.” Whatever stood out."
+      messages: [
+        "First — anything I got wrong?",
+        "Wrong year, misspelled name, a teacher I mixed up. Anything that made you wince."
+      ],
+      placeholder: "e.g., \"Eric Larson is Houston Symphony, not Houston Grand Opera.\""
     },
     {
       id: 'lansing_gigs', type: 'textarea',
-      message: "Paid gigs you’ve played in or around Lansing?\n\nVenue, rough date, what you played. Approximate is fine.",
-      placeholder: "e.g., “Wedding at Eagle Eye Golf Club, September 2025 — jazz duo with pianist Mark.”"
+      messages: [
+        "Real paid gigs you've played in or around Lansing?",
+        "Venue, rough date, what you played. Approximate is fine."
+      ],
+      placeholder: "e.g., \"Wedding at Eagle Eye Golf Club, September 2025 — jazz duo with pianist Mark.\""
     },
     {
       id: 'ann_arbor_gigs', type: 'textarea',
-      message: "Paid gigs in or around Ann Arbor?\n\nSame format — venue, date, what you played.",
-      placeholder: "e.g., “Pit bass for U‑M Musical Theatre, Sweeney Todd, spring 2024.”"
+      messages: [
+        "Paid gigs in or around Ann Arbor?",
+        "Same format — venue, date, what you played."
+      ],
+      placeholder: "e.g., \"Pit bass for U‑M Musical Theatre, Sweeney Todd, spring 2024.\""
     },
     {
       id: 'other_gigs', type: 'textarea',
-      message: "Other paid gigs anywhere else?\n\nChurches, weddings, jazz dates, recording sessions — anything I should list.",
-      placeholder: "Venue, city, what you played. List as many as you can remember."
+      messages: [
+        "Other paid gigs anywhere else?",
+        "Churches, weddings, jazz dates, recording sessions, festivals — anything you want on the record."
+      ],
+      placeholder: "Venue, city, what you played. List as many as come to mind."
+    },
+    {
+      id: 'recital_dates', type: 'textarea',
+      messages: [
+        "Recitals and major school performances?",
+        "Senior recital, juries, honors recitals, concerto competitions — dates and venues if you remember."
+      ],
+      placeholder: "e.g., \"Junior recital, U‑M SMTD, April 2022.\""
     },
     {
       id: 'photos', type: 'files',
-      message: "Got photos of you playing?\n\nPick any from your phone — they’ll compress automatically before sending.",
+      messages: [
+        "Got photos of you playing?",
+        "Open your camera roll and pick a few. They'll compress automatically before sending."
+      ],
       accept: 'image/*', multiple: true, capture: 'environment',
-      hint: 'Pick from your photos or take a new one'
+      hint: 'Tap to pick from photos or take a new one'
     },
     {
       id: 'programs', type: 'files',
-      message: "Concert or recital programs?\n\nA photo of the cover is great. PDFs work too.",
+      messages: [
+        "Concert or recital programs?",
+        "A phone photo of the cover is perfect. PDFs work too."
+      ],
       accept: 'image/*,application/pdf', multiple: true,
       hint: 'Programs, posters, recital handouts'
     },
     {
       id: 'bio', type: 'textarea',
-      message: "Anything I should add to the bio?\n\nAnything I should take out? Your call — this is your story.",
+      messages: [
+        "Anything I should add to the bio?",
+        "Anything I should take out? Your call — this is your story."
+      ],
       placeholder: "Tell me what would make it feel more like you."
     },
     {
+      id: 'repertoire', type: 'textarea',
+      messages: [
+        "Repertoire I should mention?",
+        "Specific pieces, jazz standards you call, ensembles you play with regularly."
+      ],
+      placeholder: "e.g., \"Koussevitzky concerto, lots of Real Book, regular sub for MSU jazz combo.\""
+    },
+    {
       id: 'missing', type: 'textarea',
-      message: "Anything else missing?\n\nServices to mention, repertoire to add, recordings to link, ensembles you play with.",
-      placeholder: "e.g., “I also play electric bass — should mention both.”"
+      messages: [
+        "Anything else missing or wrong?",
+        "Services, recordings to link, social media, websites I should point to."
+      ],
+      placeholder: "Whatever's on your mind."
     },
     {
       id: 'contact', type: 'text',
-      message: "Best way to reach you about updates?\n\nPhone, email — whatever you actually check. (Optional.)",
+      messages: [
+        "Best way to reach you about updates?",
+        "Phone, email — whatever you actually check. (Optional.)"
+      ],
       placeholder: "Phone number or email"
     },
     {
       id: 'submit', type: 'submit',
-      message: "That’s everything.\n\nReady to send it to Dad?"
+      messages: [
+        "That's everything.",
+        "Hit Send and it all comes to me. I'll have the site updated in a day or two."
+      ]
     }
   ];
 
   const state = {
     step: 0,
     answers: {},
-    files: {}, // {questionId: [File, File, ...]}
-    submitted: false
+    files: {},     // {qid: [File, ...]} — not persisted (Files aren't JSON-able)
+    initialized: false,
+    submitted: false,
+    startedAt: null
   };
 
   const $ = (id) => document.getElementById(id);
@@ -296,68 +431,199 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
   const btnNext = $('fw-next');
   const btnSkip = $('fw-skip');
   const btnBack = $('fw-back');
+  const btnClose = document.querySelectorAll('[data-close]');
   const launcher = $('fw-launcher');
   const modal = $('fw-modal');
+  const savedEl = $('fw-saved');
+  const subtitleEl = $('fw-subtitle');
 
-  // Show launcher once page is interactive
-  setTimeout(() => launcher.classList.remove('hidden'), 600);
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+  // ───── Persistence ─────
+  function saveState() {
+    try {
+      const data = {
+        step: state.step,
+        answers: state.answers,
+        submitted: state.submitted,
+        startedAt: state.startedAt,
+        updatedAt: Date.now()
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      flashSaved();
+    } catch (e) {}
+  }
+  function loadSaved() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) { return null; }
+  }
+  function clearSaved() { try { localStorage.removeItem(STORAGE_KEY); } catch (e) {} }
+
+  function flashSaved() {
+    savedEl.classList.add('show');
+    clearTimeout(flashSaved._t);
+    flashSaved._t = setTimeout(() => savedEl.classList.remove('show'), 1400);
+  }
+
+  // ───── Launcher state ─────
+  function updateLauncher() {
+    const saved = loadSaved();
+    const label = launcher.querySelector('.fw-launcher-label');
+    if (saved && !saved.submitted && saved.step > 0) {
+      label.textContent = 'Continue feedback';
+      launcher.classList.add('resume');
+    } else if (saved && saved.submitted) {
+      label.textContent = 'Send another note';
+      launcher.classList.remove('resume');
+    } else {
+      label.textContent = 'Help improve this site';
+      launcher.classList.remove('resume');
+    }
+  }
+
+  // ───── Modal open/close ─────
   function open() {
     modal.hidden = false;
     modal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('fw-open');
-    if (state.step === 0 && log.children.length === 0) render();
+    if (!state.initialized) initialize();
   }
   function close() {
     modal.hidden = true;
     modal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('fw-open');
+    updateLauncher();
   }
-
   launcher.addEventListener('click', open);
-  document.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', close));
+  btnClose.forEach(el => el.addEventListener('click', close));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) close(); });
 
-  // Auto-open via ?feedback=1
-  if (new URLSearchParams(location.search).get('feedback') === '1') {
-    setTimeout(open, 300);
+  // ───── Conversation rendering ─────
+  function makeTurn(who, isFirst) {
+    const turn = document.createElement('div');
+    turn.className = 'fw-turn ' + who;
+    if (isFirst && who === 'dad') {
+      const w = document.createElement('span');
+      w.className = 'fw-who';
+      w.textContent = 'Dad';
+      turn.appendChild(w);
+    }
+    return turn;
   }
 
-  function appendMsg(text, who, opts = {}) {
-    const div = document.createElement('div');
-    div.className = 'fw-msg ' + who + (opts.skip ? ' skip' : '');
-    if (who === 'dad') {
-      const w = document.createElement('span');
-      w.className = 'who';
-      w.textContent = 'Dad';
-      div.appendChild(w);
-    }
-    const t = document.createElement('span');
-    t.textContent = text;
-    div.appendChild(t);
+  function appendDadMessage(text, isFirstOfTurn) {
+    const turn = makeTurn('dad', isFirstOfTurn);
+    const msg = document.createElement('div');
+    msg.className = 'fw-msg dad';
+    msg.textContent = text;
+    turn.appendChild(msg);
+    log.appendChild(turn);
+    scrollLog();
+    return turn;
+  }
+
+  function appendYouMessage(text, opts = {}) {
+    const turn = makeTurn('you', false);
+    const msg = document.createElement('div');
+    msg.className = 'fw-msg you' + (opts.skip ? ' skip' : '');
+    msg.textContent = text;
     if (opts.files && opts.files.length) {
       const wrap = document.createElement('div');
-      wrap.className = 'files';
+      wrap.className = 'fw-files';
       opts.files.forEach(f => {
-        const tag = document.createElement('span');
-        tag.textContent = '📎 ' + f.name;
-        wrap.appendChild(tag);
+        if (f.type && f.type.startsWith('image/')) {
+          const img = document.createElement('img');
+          img.className = 'fw-file-thumb';
+          img.alt = f.name;
+          const url = URL.createObjectURL(f);
+          img.src = url;
+          img.onload = () => URL.revokeObjectURL(url);
+          wrap.appendChild(img);
+        } else {
+          const tag = document.createElement('span');
+          tag.className = 'fw-file-doc';
+          tag.textContent = '📄 ' + f.name;
+          wrap.appendChild(tag);
+        }
       });
-      div.appendChild(wrap);
+      msg.appendChild(wrap);
     }
-    log.appendChild(div);
-    log.scrollTop = log.scrollHeight;
+    turn.appendChild(msg);
+    log.appendChild(turn);
+    scrollLog();
   }
 
-  function setProgress() {
-    const pct = Math.min(100, (state.step / (STEPS.length - 1)) * 100);
-    progressBar.style.width = pct + '%';
+  function showTyping() {
+    const t = document.createElement('div');
+    t.className = 'fw-typing';
+    t.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+    log.appendChild(t);
+    scrollLog();
+    return t;
   }
 
+  function scrollLog() {
+    requestAnimationFrame(() => { log.scrollTop = log.scrollHeight; });
+  }
+
+  // ───── Step playback ─────
+  async function playStep(skipTyping = false) {
+    const s = STEPS[state.step];
+    const msgs = Array.isArray(s.messages) ? s.messages : [s.message];
+    updateProgress();
+    updateSubtitle();
+    for (let i = 0; i < msgs.length; i++) {
+      if (!skipTyping) {
+        const typing = showTyping();
+        // Pace: ~25ms per char, min 550ms, max 1600ms
+        const ms = Math.max(550, Math.min(1600, msgs[i].length * 25));
+        await sleep(ms);
+        typing.remove();
+      }
+      appendDadMessage(msgs[i], i === 0);
+      if (i < msgs.length - 1 && !skipTyping) await sleep(280);
+    }
+    renderInput();
+  }
+
+  function rebuildConversation() {
+    // For resume: silently replay all previous turns from saved answers
+    for (let i = 0; i < state.step; i++) {
+      const s = STEPS[i];
+      const msgs = Array.isArray(s.messages) ? s.messages : [s.message];
+      msgs.forEach((m, idx) => appendDadMessage(m, idx === 0));
+      if (s.type === 'intro') continue;
+      const a = state.answers[s.id];
+      if (a === '__skipped__') {
+        appendYouMessage('(skipped)', { skip: true });
+      } else if (a) {
+        appendYouMessage(String(a));
+      }
+    }
+  }
+
+  function updateProgress() {
+    const pct = (state.step / (STEPS.length - 1)) * 100;
+    progressBar.style.width = Math.min(100, pct) + '%';
+  }
+
+  function updateSubtitle() {
+    if (state.step === 0) {
+      subtitleEl.textContent = 'A quick chat';
+    } else if (state.step >= STEPS.length - 1) {
+      subtitleEl.textContent = 'Almost done';
+    } else {
+      subtitleEl.textContent = 'Question ' + state.step + ' of ' + (STEPS.length - 2);
+    }
+  }
+
+  // ───── Input rendering ─────
   function currentValue() {
     const s = STEPS[state.step];
-    if (s.type === 'textarea') return inputArea.querySelector('textarea').value.trim();
-    if (s.type === 'text') return inputArea.querySelector('input[type="text"]').value.trim();
+    if (s.type === 'textarea') return inputArea.querySelector('textarea')?.value.trim();
+    if (s.type === 'text') return inputArea.querySelector('input[type="text"]')?.value.trim();
     if (s.type === 'files') return state.files[s.id] || [];
     return null;
   }
@@ -366,38 +632,47 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
     const s = STEPS[state.step];
     inputArea.innerHTML = '';
 
-    if (s.type === 'intro' || s.type === 'submit') {
-      btnNext.textContent = s.cta || (s.type === 'submit' ? 'Send to Dad' : 'Next →');
+    if (s.type === 'intro') {
+      btnNext.textContent = s.cta || 'Continue';
       btnSkip.style.display = 'none';
-      btnBack.style.display = state.step === 0 ? 'none' : 'inline-flex';
+      btnBack.style.display = 'none';
+      btnNext.disabled = false;
+      return;
+    }
+    if (s.type === 'submit') {
+      btnNext.textContent = 'Send to Dad →';
+      btnSkip.style.display = 'none';
+      btnBack.style.display = 'inline-flex';
       btnNext.disabled = false;
       return;
     }
     btnSkip.style.display = 'inline-flex';
     btnBack.style.display = 'inline-flex';
-    btnNext.textContent = 'Next →';
+    btnNext.textContent = 'Send →';
 
     if (s.type === 'textarea') {
       const ta = document.createElement('textarea');
       ta.placeholder = s.placeholder || '';
-      ta.value = state.answers[s.id] || '';
-      ta.oninput = () => btnNext.disabled = !ta.value.trim();
+      ta.value = state.answers[s.id] && state.answers[s.id] !== '__skipped__' ? state.answers[s.id] : '';
+      ta.oninput = () => { btnNext.disabled = !ta.value.trim(); };
+      ta.onkeydown = (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && ta.value.trim()) advance(false);
+      };
       inputArea.appendChild(ta);
       btnNext.disabled = !ta.value.trim();
-      setTimeout(() => ta.focus(), 100);
     } else if (s.type === 'text') {
       const ip = document.createElement('input');
       ip.type = 'text';
       ip.placeholder = s.placeholder || '';
-      ip.value = state.answers[s.id] || '';
-      ip.oninput = () => btnNext.disabled = !ip.value.trim();
+      ip.value = state.answers[s.id] && state.answers[s.id] !== '__skipped__' ? state.answers[s.id] : '';
+      ip.oninput = () => { btnNext.disabled = !ip.value.trim(); };
+      ip.onkeydown = (e) => { if (e.key === 'Enter' && ip.value.trim()) advance(false); };
       inputArea.appendChild(ip);
       btnNext.disabled = !ip.value.trim();
-      setTimeout(() => ip.focus(), 100);
     } else if (s.type === 'files') {
       const label = document.createElement('label');
       label.className = 'filepick';
-      label.innerHTML = '+ Add files <small>' + (s.hint || '') + '</small>';
+      label.innerHTML = '<span>＋ Add files</span><small>' + (s.hint || '') + '</small>';
       const ip = document.createElement('input');
       ip.type = 'file';
       ip.accept = s.accept;
@@ -415,15 +690,15 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
         (state.files[s.id] || []).forEach((f, i) => {
           const row = document.createElement('div');
           row.className = 'row';
-          row.innerHTML = '<span>📎 ' + f.name + ' <small style="color:#8a8a8a">(' + Math.round(f.size/1024) + ' KB)</small></span>';
+          row.innerHTML = '<span>' +
+            (f.type && f.type.startsWith('image/') ? '🖼️' : '📄') +
+            ' ' + f.name +
+            ' <span class="meta">' + Math.round(f.size/1024) + ' KB</span></span>';
           const x = document.createElement('button');
           x.type = 'button';
           x.textContent = '×';
-          x.onclick = () => {
-            state.files[s.id].splice(i, 1);
-            refresh();
-            btnNext.disabled = !(state.files[s.id] || []).length;
-          };
+          x.setAttribute('aria-label', 'Remove file');
+          x.onclick = () => { state.files[s.id].splice(i, 1); refresh(); };
           row.appendChild(x);
           picked.appendChild(row);
         });
@@ -433,10 +708,16 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
 
       ip.onchange = async () => {
         state.files[s.id] = state.files[s.id] || [];
-        for (const file of ip.files) {
+        const files = Array.from(ip.files);
+        // Compress images
+        for (const file of files) {
           if (file.type.startsWith('image/')) {
-            const compressed = await compressImage(file);
-            state.files[s.id].push(compressed);
+            try {
+              const c = await compressImage(file);
+              state.files[s.id].push(c);
+            } catch (e) {
+              state.files[s.id].push(file);
+            }
           } else {
             state.files[s.id].push(file);
           }
@@ -447,104 +728,110 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
     }
   }
 
+  // ───── Image compression ─────
   async function compressImage(file) {
-    return new Promise((resolve) => {
-      const img = new Image();
+    return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = (e) => { img.src = e.target.result; };
-      img.onload = () => {
-        const max = 1600;
-        let w = img.width, h = img.height;
-        if (w > h && w > max) { h = h * (max / w); w = max; }
-        else if (h > max) { w = w * (max / h); h = max; }
-        const c = document.createElement('canvas');
-        c.width = w; c.height = h;
-        c.getContext('2d').drawImage(img, 0, 0, w, h);
-        c.toBlob((blob) => {
-          const newName = file.name.replace(/\.[^/.]+$/, '') + '.jpg';
-          resolve(new File([blob], newName, { type: 'image/jpeg' }));
-        }, 'image/jpeg', 0.82);
+      reader.onerror = reject;
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onerror = reject;
+        img.onload = () => {
+          const max = 1600;
+          let w = img.width, h = img.height;
+          if (w > h && w > max) { h = h * (max / w); w = max; }
+          else if (h > max) { w = w * (max / h); h = max; }
+          const c = document.createElement('canvas');
+          c.width = w; c.height = h;
+          c.getContext('2d').drawImage(img, 0, 0, w, h);
+          c.toBlob((blob) => {
+            const name = file.name.replace(/\.[^/.]+$/, '') + '.jpg';
+            resolve(new File([blob], name, { type: 'image/jpeg' }));
+          }, 'image/jpeg', 0.82);
+        };
+        img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     });
   }
 
-  function render() {
+  // ───── Flow control ─────
+  async function advance(skipped) {
     const s = STEPS[state.step];
-    setProgress();
-    // Only push the dad message if we haven't already shown it
-    const lastMsg = log.querySelector('.fw-msg.dad:last-of-type span:last-child');
-    if (!lastMsg || lastMsg.textContent !== s.message) {
-      appendMsg(s.message, 'dad');
-    }
-    renderInput();
-  }
-
-  function advance(skipped = false) {
-    const s = STEPS[state.step];
+    if (s.type === 'submit') { submit(); return; }
     if (s.type === 'intro') {
-      state.step++;
-      render();
+      state.step++; saveState();
+      await playStep();
       return;
     }
-    if (s.type === 'submit') {
-      submit();
-      return;
-    }
+
     if (skipped) {
-      appendMsg('(skipped)', 'you', { skip: true });
+      state.answers[s.id] = '__skipped__';
+      delete state.files[s.id];
+      appendYouMessage('(skipped)', { skip: true });
     } else if (s.type === 'files') {
       const arr = state.files[s.id] || [];
-      if (arr.length) appendMsg(arr.length + ' file' + (arr.length > 1 ? 's' : '') + ' attached', 'you', { files: arr });
-      else { appendMsg('(skipped)', 'you', { skip: true }); }
+      if (arr.length) {
+        state.answers[s.id] = arr.length + ' file' + (arr.length > 1 ? 's' : '') + ' attached';
+        appendYouMessage(state.answers[s.id], { files: arr });
+      } else {
+        state.answers[s.id] = '__skipped__';
+        appendYouMessage('(skipped)', { skip: true });
+      }
     } else {
       const v = currentValue();
       state.answers[s.id] = v;
-      appendMsg(v, 'you');
+      appendYouMessage(v);
     }
     state.step++;
+    saveState();
     if (state.step >= STEPS.length) state.step = STEPS.length - 1;
-    render();
+    await playStep();
   }
 
-  function goBack() {
+  async function goBack() {
     if (state.step === 0) return;
-    // Remove last two messages from log (your answer + next dad question if shown)
-    const msgs = log.querySelectorAll('.fw-msg');
-    // Remove until we drop the previous "you" answer too
-    if (msgs.length >= 1 && msgs[msgs.length - 1].classList.contains('dad')) {
-      msgs[msgs.length - 1].remove();
+    // Remove last two turns (dad question + you answer)
+    const turns = log.querySelectorAll('.fw-turn');
+    // Remove dad turn of current question
+    for (let i = turns.length - 1; i >= 0 && turns[i].classList.contains('dad'); i--) {
+      turns[i].remove();
     }
-    const remaining = log.querySelectorAll('.fw-msg');
-    if (remaining.length >= 1 && remaining[remaining.length - 1].classList.contains('you')) {
+    // Remove the previous "you" answer turn
+    const remaining = log.querySelectorAll('.fw-turn');
+    if (remaining.length && remaining[remaining.length - 1].classList.contains('you')) {
       remaining[remaining.length - 1].remove();
     }
     state.step--;
-    render();
+    saveState();
+    await playStep(true); // skip typing on back
   }
 
+  // ───── Submit ─────
   async function submit() {
     if (state.submitted) return;
     state.submitted = true;
     btnNext.disabled = true;
     btnSkip.disabled = true;
     btnBack.disabled = true;
-    inputArea.innerHTML = '<p style="color:#8a8a8a;text-align:center;padding:20px;">Sending to Dad…</p>';
+    inputArea.innerHTML = '<p style="color:#8a8a8a;text-align:center;padding:18px;">Sending to Dad…</p>';
 
     const fd = new FormData();
     fd.append('access_key', WEB3FORMS_KEY);
     fd.append('subject', '🎻 Grant feedback — ' + new Date().toLocaleString());
     fd.append('from_name', 'Grant (feedback wizard)');
 
-    // Build a readable email body
     const lines = ['Grant submitted the feedback wizard.', '', '─────────────', ''];
     STEPS.forEach(s => {
       if (s.type === 'intro' || s.type === 'submit') return;
       const ans = state.answers[s.id];
       const fs = state.files[s.id] || [];
-      lines.push('Q: ' + s.message);
+      const qText = Array.isArray(s.messages) ? s.messages.join(' ') : s.message;
+      lines.push('Q: ' + qText);
       if (s.type === 'files') {
         lines.push('A: ' + (fs.length ? fs.length + ' file(s) attached' : '(skipped)'));
+      } else if (ans === '__skipped__') {
+        lines.push('A: (skipped)');
       } else {
         lines.push('A: ' + (ans || '(skipped)'));
       }
@@ -552,7 +839,6 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
     });
     fd.append('message', lines.join('\n'));
 
-    // Attach files (max 5 by Web3Forms)
     let attachIdx = 0;
     Object.entries(state.files).forEach(([qid, arr]) => {
       arr.forEach((f) => {
@@ -566,43 +852,89 @@ const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
     try {
       const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd });
       const j = await res.json();
-      if (j.success) showSuccess();
-      else showError(j.message || 'Submission failed');
+      if (j.success) {
+        saveState();
+        showSuccess();
+      } else {
+        state.submitted = false;
+        showError(j.message || 'Submission failed');
+      }
     } catch (e) {
+      state.submitted = false;
       showError(e.message || 'Network error');
     }
   }
 
   function showSuccess() {
     inputArea.innerHTML = `
-      <div class="fw-success">
-        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5">
+      <div class="fw-screen">
+        <svg viewBox="0 0 24 24" width="54" height="54" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
         </svg>
         <h3>Sent.</h3>
         <p>Dad will update the site in the next day or two. Thanks Grant.</p>
+        <p class="secondary">You can close this and come back anytime to add more.</p>
       </div>`;
     btnNext.style.display = 'none';
     btnSkip.style.display = 'none';
     btnBack.textContent = 'Close';
     btnBack.disabled = false;
+    btnBack.style.display = 'inline-flex';
     btnBack.onclick = close;
   }
 
   function showError(msg) {
     inputArea.innerHTML = `
-      <div class="fw-success">
-        <h3 style="color:#ff8a8a">Couldn't send.</h3>
+      <div class="fw-screen">
+        <h3 style="color:#ffb3a8">Couldn't send.</h3>
         <p>${msg}</p>
-        <p style="font-size:0.85rem;margin-top:14px;">Text Dad directly — he'll grab it.</p>
+        <p class="secondary">Your answers are saved here — try again, or text Dad and he'll grab them.</p>
       </div>`;
     btnNext.disabled = false;
+    btnNext.style.display = 'inline-flex';
     btnNext.textContent = 'Try again';
+    btnSkip.style.display = 'none';
     btnNext.onclick = () => { state.submitted = false; submit(); };
   }
 
+  // ───── Init / resume ─────
+  function initialize() {
+    state.initialized = true;
+    const saved = loadSaved();
+    if (saved && !saved.submitted && saved.step > 0) {
+      // Resume mode
+      state.step = saved.step;
+      state.answers = saved.answers || {};
+      state.startedAt = saved.startedAt;
+      rebuildConversation();
+      // Insert a soft welcome-back marker before the current step
+      appendDadMessage("Welcome back, Grant. Picking up where we left off.", true);
+      setTimeout(() => playStep(true), 200);
+    } else if (saved && saved.submitted) {
+      // Already submitted — offer to send another
+      state.startedAt = Date.now();
+      state.answers = {};
+      state.step = 0;
+      appendDadMessage("You already sent me a batch — thanks. Got more? We can start a new round.", true);
+      setTimeout(() => playStep(true), 200);
+    } else {
+      state.startedAt = Date.now();
+      playStep();
+    }
+  }
+
+  // ───── Bind buttons ─────
   btnNext.addEventListener('click', () => advance(false));
   btnSkip.addEventListener('click', () => advance(true));
   btnBack.addEventListener('click', goBack);
+
+  // ───── Boot ─────
+  updateLauncher();
+  setTimeout(() => launcher.classList.remove('hidden'), 600);
+
+  // Auto-open via ?feedback=1
+  if (new URLSearchParams(location.search).get('feedback') === '1') {
+    setTimeout(open, 500);
+  }
 })();
 </script>
